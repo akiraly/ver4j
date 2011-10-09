@@ -58,7 +58,7 @@ active comment. This library helps doing that in Java.
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.9</version>
+			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

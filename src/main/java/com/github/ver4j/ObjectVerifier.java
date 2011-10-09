@@ -2,6 +2,8 @@ package com.github.ver4j;
 
 import java.util.Locale;
 
+import javax.annotation.Nonnull;
+
 public class ObjectVerifier extends AVerifier {
 	private final String category;
 
@@ -10,8 +12,8 @@ public class ObjectVerifier extends AVerifier {
 	private final ExceptionFactory<?> nullExceptionFactory;
 
 	public ObjectVerifier(String category,
-			ExceptionFactory<?> generalExceptionFactory,
-			ExceptionFactory<?> nullExceptionFactory) {
+			@Nonnull ExceptionFactory<?> generalExceptionFactory,
+			@Nonnull ExceptionFactory<?> nullExceptionFactory) {
 		super();
 		this.category = category;
 		this.generalExceptionFactory = generalExceptionFactory;
@@ -41,7 +43,7 @@ public class ObjectVerifier extends AVerifier {
 				locale, errorMessageArgs);
 	}
 
-	public final <T> T notNull(T object) {
+	public final <T> T notNull(@Nonnull T object) {
 		if (!isEnabled()) {
 			return object;
 		}
@@ -49,7 +51,7 @@ public class ObjectVerifier extends AVerifier {
 		return object;
 	}
 
-	public final <T> T notNull(T object, Object errorMessage) {
+	public final <T> T notNull(@Nonnull T object, Object errorMessage) {
 		if (!isEnabled()) {
 			return object;
 		}
@@ -57,7 +59,7 @@ public class ObjectVerifier extends AVerifier {
 		return object;
 	}
 
-	public final <T> T notNull(T object, String errorMessageTemplate,
+	public final <T> T notNull(@Nonnull T object, String errorMessageTemplate,
 			Locale locale, Object... errorMessageArgs) {
 		if (!isEnabled()) {
 			return object;
@@ -67,10 +69,12 @@ public class ObjectVerifier extends AVerifier {
 		return object;
 	}
 
+	@Nonnull
 	protected ExceptionFactory<?> getGeneralExceptionFactory() {
 		return generalExceptionFactory;
 	}
 
+	@Nonnull
 	protected ExceptionFactory<?> getNullExceptionFactory() {
 		return nullExceptionFactory;
 	}

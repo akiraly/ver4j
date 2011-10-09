@@ -1,12 +1,17 @@
 package com.github.ver4j;
 
+import javax.annotation.Nonnull;
+
 public class Verify {
 	private static final GeneralVerifierRegistry CATEGORIZER = new GeneralVerifierRegistry();
 
+	@Nonnull
 	public static final CompositeVerifier arg;
 
+	@Nonnull
 	public static final CompositeVerifier state;
 
+	@Nonnull
 	public static final CompositeVerifier result;
 
 	static {
@@ -16,6 +21,7 @@ public class Verify {
 		result = verifier.result;
 	}
 
+	@Nonnull
 	public static final GeneralVerifier getVerifier(String category) {
 		return CATEGORIZER.getVerifyer(category);
 	}

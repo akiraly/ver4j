@@ -1,5 +1,7 @@
 package com.github.ver4j;
 
+import javax.annotation.Nonnull;
+
 public class GeneralVerifier extends AVerifier {
 	private final String category;
 
@@ -15,8 +17,8 @@ public class GeneralVerifier extends AVerifier {
 				new CompositeVerifier(category, null, null));
 	}
 
-	public GeneralVerifier(String category, CompositeVerifier arg,
-			CompositeVerifier state, CompositeVerifier result) {
+	public GeneralVerifier(String category, @Nonnull CompositeVerifier arg,
+			@Nonnull CompositeVerifier state, @Nonnull CompositeVerifier result) {
 		super();
 		this.category = category;
 		this.arg = arg;

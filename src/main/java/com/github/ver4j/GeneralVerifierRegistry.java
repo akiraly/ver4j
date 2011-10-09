@@ -3,15 +3,19 @@ package com.github.ver4j;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.Nonnull;
+
 public class GeneralVerifierRegistry {
 	private final GeneralVerifier global = new GeneralVerifier(null);
 
 	private final Map<String, GeneralVerifier> verifiers = new ConcurrentHashMap<String, GeneralVerifier>();
 
+	@Nonnull
 	public GeneralVerifier getGlobal() {
 		return global;
 	}
 
+	@Nonnull
 	public GeneralVerifier getVerifyer(String category) {
 		global.arg.notNull(category);
 

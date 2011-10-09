@@ -1,26 +1,32 @@
 package com.github.ver4j;
 
+import javax.annotation.Nonnull;
+
 public class CompositeVerifier extends ObjectVerifier {
+	@Nonnull
 	public final TextVerifier text;
 
+	@Nonnull
 	public final NumberVerifier number;
 
+	@Nonnull
 	public final CollectionAndArrayVerifier collection;
 
+	@Nonnull
 	public final FileVerifier file;
 
 	public CompositeVerifier(String category,
-			ExceptionFactory<?> generalExceptionFactory,
-			ExceptionFactory<?> nullExceptionFactory) {
+			@Nonnull ExceptionFactory<?> generalExceptionFactory,
+			@Nonnull ExceptionFactory<?> nullExceptionFactory) {
 		this(category, generalExceptionFactory, nullExceptionFactory, null,
 				null, null, null);
 	}
 
 	public CompositeVerifier(String category,
-			ExceptionFactory<?> generalExceptionFactory,
-			ExceptionFactory<?> nullExceptionFactory, TextVerifier text,
-			NumberVerifier number, CollectionAndArrayVerifier collection,
-			FileVerifier file) {
+			@Nonnull ExceptionFactory<?> generalExceptionFactory,
+			@Nonnull ExceptionFactory<?> nullExceptionFactory,
+			TextVerifier text, NumberVerifier number,
+			CollectionAndArrayVerifier collection, FileVerifier file) {
 		super(category, generalExceptionFactory, nullExceptionFactory);
 
 		this.text = text != null ? text : new TextVerifier(this);

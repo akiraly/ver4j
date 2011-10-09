@@ -1,9 +1,11 @@
 package com.github.ver4j;
 
+import javax.annotation.Nonnull;
+
 public abstract class AObjectVerifierAwareVerifier extends AVerifier {
 	private final ObjectVerifier objectVerifier;
 
-	public AObjectVerifierAwareVerifier(ObjectVerifier objectVerifier) {
+	public AObjectVerifierAwareVerifier(@Nonnull ObjectVerifier objectVerifier) {
 		super();
 		this.objectVerifier = objectVerifier;
 	}

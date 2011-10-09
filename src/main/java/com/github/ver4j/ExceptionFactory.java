@@ -4,17 +4,23 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
+import javax.annotation.Nonnull;
+
 public class ExceptionFactory<T extends RuntimeException & IVerificationException> {
+	@Nonnull
 	private final String defaultMessageTemplate;
 
+	@Nonnull
 	private final Locale defaultLocale = Locale.ENGLISH;
 
+	@Nonnull
 	private final Class<T> exceptionType;
 
+	@Nonnull
 	private final Constructor<T> exceptionConstructor;
 
-	public ExceptionFactory(Class<T> exceptionType,
-			String defaultMessageTemplate) {
+	public ExceptionFactory(@Nonnull Class<T> exceptionType,
+			@Nonnull String defaultMessageTemplate) {
 		this.exceptionType = exceptionType;
 		this.defaultMessageTemplate = defaultMessageTemplate;
 
@@ -28,12 +34,14 @@ public class ExceptionFactory<T extends RuntimeException & IVerificationExceptio
 		}
 	}
 
+	@Nonnull
 	public static <T extends RuntimeException & IVerificationException> ExceptionFactory<T> of(
-			Class<T> exceptionType, String defaultMessageTemplate) {
+			@Nonnull Class<T> exceptionType,
+			@Nonnull String defaultMessageTemplate) {
 		return new ExceptionFactory<T>(exceptionType, defaultMessageTemplate);
 	}
 
-	public void throwException(IVerifier verifier, Locale locale,
+	public void throwException(@Nonnull IVerifier verifier, Locale locale,
 			String messageTemplate, Object[] messageTemplateArgs) {
 		String message = String.format(locale != null ? locale : defaultLocale,
 				messageTemplate != null ? messageTemplate
@@ -53,8 +61,9 @@ public class ExceptionFactory<T extends RuntimeException & IVerificationExceptio
 		throw re;
 	}
 
-	private IllegalStateException failException(IVerifier verifier,
-			String message, Exception cause) {
+	@Nonnull
+	private IllegalStateException failException(@Nonnull IVerifier verifier,
+			String message, @Nonnull Exception cause) {
 		return new IllegalStateException(
 				String.format(
 						defaultLocale,
@@ -62,10 +71,12 @@ public class ExceptionFactory<T extends RuntimeException & IVerificationExceptio
 						exceptionType, message, verifier), cause);
 	}
 
+	@Nonnull
 	public String getDefaultMessageTemplate() {
 		return defaultMessageTemplate;
 	}
 
+	@Nonnull
 	public Class<T> getExceptionType() {
 		return exceptionType;
 	}
