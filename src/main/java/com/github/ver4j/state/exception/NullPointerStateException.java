@@ -1,4 +1,4 @@
-package com.github.ver4j.exception.state;
+package com.github.ver4j.state.exception;
 
 public class NullPointerStateException extends StateVerificationException {
 	private static final long serialVersionUID = 1L;

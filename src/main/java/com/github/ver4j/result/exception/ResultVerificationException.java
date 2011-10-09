@@ -1,14 +1,14 @@
-package com.github.ver4j.exception.arg;
+package com.github.ver4j.result.exception;
 
 import com.github.ver4j.IVerificationException;
 
-public class ArgumentVerificationException extends IllegalArgumentException
-		implements IVerificationException {
+public class ResultVerificationException extends RuntimeException implements
+		IVerificationException {
 	private static final long serialVersionUID = 1L;
 
 	private final String category;
 
-	public ArgumentVerificationException(String message, String category) {
+	public ResultVerificationException(String message, String category) {
 		super(message);
 		this.category = category;
 	}

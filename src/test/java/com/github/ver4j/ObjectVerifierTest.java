@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import com.github.ver4j.ExceptionFactory;
 import com.github.ver4j.ObjectVerifier;
-import com.github.ver4j.exception.arg.ArgumentVerificationException;
-import com.github.ver4j.exception.arg.NullPointerArgumentException;
+import com.github.ver4j.arg.exception.ArgumentVerificationException;
+import com.github.ver4j.arg.exception.NullPointerArgumentException;
 
 public class ObjectVerifierTest {
 	private final ObjectVerifier verifier = new ObjectVerifier(

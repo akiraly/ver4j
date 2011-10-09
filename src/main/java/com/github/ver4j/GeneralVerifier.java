@@ -2,23 +2,28 @@ package com.github.ver4j;
 
 import javax.annotation.Nonnull;
 
+import com.github.ver4j.arg.ArgCompositeVerifier;
+import com.github.ver4j.result.ResultCompositeVerifier;
+import com.github.ver4j.state.StateCompositeVerifier;
+
 public class GeneralVerifier extends AVerifier {
 	private final String category;
 
-	public final CompositeVerifier arg;
+	public final ArgCompositeVerifier arg;
 
-	public final CompositeVerifier state;
+	public final StateCompositeVerifier state;
 
-	public final CompositeVerifier result;
+	public final ResultCompositeVerifier result;
 
 	public GeneralVerifier(String category) {
-		this(category, new CompositeVerifier(category, null, null),
-				new CompositeVerifier(category, null, null),
-				new CompositeVerifier(category, null, null));
+		this(category, new ArgCompositeVerifier(category),
+				new StateCompositeVerifier(category),
+				new ResultCompositeVerifier(category));
 	}
 
-	public GeneralVerifier(String category, @Nonnull CompositeVerifier arg,
-			@Nonnull CompositeVerifier state, @Nonnull CompositeVerifier result) {
+	public GeneralVerifier(String category, @Nonnull ArgCompositeVerifier arg,
+			@Nonnull StateCompositeVerifier state,
+			@Nonnull ResultCompositeVerifier result) {
 		super();
 		this.category = category;
 		this.arg = arg;

@@ -1,14 +1,14 @@
-package com.github.ver4j.exception.state;
+package com.github.ver4j.arg.exception;
 
 import com.github.ver4j.IVerificationException;
 
-public class StateVerificationException extends IllegalStateException implements
-		IVerificationException {
+public class ArgumentVerificationException extends IllegalArgumentException
+		implements IVerificationException {
 	private static final long serialVersionUID = 1L;
 
 	private final String category;
 
-	public StateVerificationException(String message, String category) {
+	public ArgumentVerificationException(String message, String category) {
 		super(message);
 		this.category = category;
 	}
