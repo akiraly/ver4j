@@ -5,16 +5,16 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ExceptionInfoTest {
+public class ExceptionTypeInfoTest {
 	@Test
 	public void testWithCorrectExceptionType() throws InstantiationException,
 			IllegalAccessException, InvocationTargetException {
-		ExceptionInfo<TestVerificationException> exceptionInfo = new ExceptionInfo<TestVerificationException>(
+		ExceptionTypeInfo<TestVerificationException> exceptionTypeInfo = new ExceptionTypeInfo<TestVerificationException>(
 				TestVerificationException.class);
 		String message = "message";
 		String category = "category";
 
-		TestVerificationException exception = exceptionInfo.create(message,
+		TestVerificationException exception = exceptionTypeInfo.create(message,
 				category);
 
 		Assert.assertNotNull(exception);
@@ -24,21 +24,21 @@ public class ExceptionInfoTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testWithBrokenExceptionType() {
-		new ExceptionInfo<BrokenTestVerificationException>(
+		new ExceptionTypeInfo<BrokenTestVerificationException>(
 				BrokenTestVerificationException.class);
 	}
 
 	@Test(expected = InvocationTargetException.class)
 	public void testWithBrokenExceptionType2() throws InstantiationException,
 			IllegalAccessException, InvocationTargetException {
-		ExceptionInfo<BrokenTestVerificationException2> exceptionInfo;
+		ExceptionTypeInfo<BrokenTestVerificationException2> exceptionTypeInfo;
 		try {
-			exceptionInfo = new ExceptionInfo<BrokenTestVerificationException2>(
+			exceptionTypeInfo = new ExceptionTypeInfo<BrokenTestVerificationException2>(
 					BrokenTestVerificationException2.class);
 		} catch (IllegalStateException e) {
 			throw new RuntimeException(e);
 		}
-		exceptionInfo.create("message", "category");
+		exceptionTypeInfo.create("message", "category");
 	}
 
 }

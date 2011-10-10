@@ -5,54 +5,76 @@ import java.util.Locale;
 
 import javax.annotation.Nonnull;
 
-public class ExceptionFactory {
-	@Nonnull
-	private final String defaultMessageTemplate;
+public class ExceptionFactory<T extends RuntimeException & IVerificationException>
+		implements ICategorized {
+	private final String category;
+	private final ExceptionTypeInfo<T> typeInfo;
+	private final ExceptionMessageInfo messageInfo;
 
-	@Nonnull
-	private final Locale defaultLocale;
-
-	public ExceptionFactory(String type) {
-		this(type + " (%s) failed verification because %s.", Locale.ENGLISH);
+	public ExceptionFactory(String category,
+			@Nonnull ExceptionTypeInfo<T> typeInfo,
+			@Nonnull ExceptionMessageInfo messageInfo) {
+		this.category = category;
+		this.typeInfo = typeInfo;
+		this.messageInfo = messageInfo;
 	}
 
-	protected ExceptionFactory(@Nonnull String defaultMessageTemplate,
-			@Nonnull Locale defaultLocale) {
-		this.defaultMessageTemplate = defaultMessageTemplate;
-		this.defaultLocale = defaultLocale;
+	public static final <T extends RuntimeException & IVerificationException> ExceptionFactory<T> of(
+			String category, @Nonnull ExceptionTypeInfo<T> typeInfo,
+			@Nonnull ExceptionMessageInfo messageInfo) {
+		return new ExceptionFactory<T>(category, typeInfo, messageInfo);
 	}
 
-	public <T extends RuntimeException & IVerificationException> T createException(
-			@Nonnull IVerifier verifier,
-			@Nonnull ExceptionInfo<T> exceptionInfo, Locale locale,
-			String messageTemplate, Object[] messageTemplateArgs) {
-		String message = String.format(locale != null ? locale : defaultLocale,
-				messageTemplate != null ? messageTemplate
-						: defaultMessageTemplate, messageTemplateArgs);
+	public T newException() {
+		return createException(null, null, new Object[] { null });
+	}
+
+	public T newException(Object errorMessage) {
+		return createException(null, null, new Object[] { errorMessage });
+	}
+
+	public T newException(String errorMessageTemplate, Locale locale,
+			Object[] errorMessageArgs) {
+		return createException(locale, errorMessageTemplate, errorMessageArgs);
+	}
+
+	protected T createException(@Nonnull Locale locale, String messageTemplate,
+			Object[] messageTemplateArgs) {
+		String message = messageInfo.createMessage(locale, messageTemplate,
+				messageTemplateArgs);
 		try {
-			return exceptionInfo.create(message, verifier.getCategory());
+			return typeInfo.create(message, category);
 		} catch (InstantiationException e) {
-			throw failException(verifier, exceptionInfo, message, e);
+			throw failException(message, e);
 		} catch (IllegalAccessException e) {
-			throw failException(verifier, exceptionInfo, message, e);
+			throw failException(message, e);
 		} catch (InvocationTargetException e) {
-			throw failException(verifier, exceptionInfo, message, e);
+			throw failException(message, e);
 		}
 	}
 
 	@Nonnull
-	private IllegalStateException failException(@Nonnull IVerifier verifier,
-			@Nonnull ExceptionInfo<?> exceptionInfo, String message,
+	private IllegalStateException failException(String message,
 			@Nonnull Exception cause) {
 		return new IllegalStateException(
 				String.format(
-						defaultLocale,
-						"Exception while building verification exception with type (%s) and message (%s) for verifier (%s).",
-						exceptionInfo.getType(), message, verifier), cause);
+						messageInfo.getDefaultLocale(),
+						"Exception while building verification exception with type (%s) and message (%s) for verifier with category (%s).",
+						typeInfo.getType(), message, category), cause);
+	}
+
+	@Override
+	public String getCategory() {
+		return category;
 	}
 
 	@Nonnull
-	public String getDefaultMessageTemplate() {
-		return defaultMessageTemplate;
+	public ExceptionTypeInfo<T> getTypeInfo() {
+		return typeInfo;
+	}
+
+	@Nonnull
+	public ExceptionMessageInfo getMessageInfo() {
+		return messageInfo;
 	}
 }

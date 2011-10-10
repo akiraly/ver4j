@@ -6,12 +6,12 @@ import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nonnull;
 
 @Nonnull
-public class ExceptionInfo<T extends RuntimeException & IVerificationException> {
+public class ExceptionTypeInfo<T extends RuntimeException & IVerificationException> {
 	private final Class<T> type;
 
 	private final Constructor<T> exceptionConstructor;
 
-	public ExceptionInfo(Class<T> exceptionType) {
+	public ExceptionTypeInfo(Class<T> exceptionType) {
 		super();
 		this.type = exceptionType;
 
@@ -25,9 +25,9 @@ public class ExceptionInfo<T extends RuntimeException & IVerificationException> 
 		}
 	}
 
-	public static <T extends RuntimeException & IVerificationException> ExceptionInfo<T> of(
+	public static <T extends RuntimeException & IVerificationException> ExceptionTypeInfo<T> of(
 			Class<T> exceptionType) {
-		return new ExceptionInfo<T>(exceptionType);
+		return new ExceptionTypeInfo<T>(exceptionType);
 	}
 
 	public T create(String message, String category)

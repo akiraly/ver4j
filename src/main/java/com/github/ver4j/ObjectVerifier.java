@@ -5,51 +5,45 @@ import java.util.Locale;
 import javax.annotation.Nonnull;
 
 public class ObjectVerifier extends AVerifier {
+	private static final String FAILED_IS_TRUE_CAUSE = "it is false";
+
+	private static final String FAILED_NOT_NULL_CAUSE = "it is null";
+
 	private final String category;
 
-	/**
-	 * Consider this:
-	 * 
-	 * ${type} (%s) failed verification because {cause}.
-	 * 
-	 * arg/state/return (myVar) failed verification because it is null.
-	 * 
-	 * This could reduce our need for one exception factory per type (composite
-	 * verifier).
-	 */
-	private final ExceptionFactory exceptionFactory;
+	private final ExceptionMessageInfo defaultExceptionMessageInfo;
 
-	private final String failedIsTrueCause = "it is false";
+	private final ExceptionFactory<?> generalExceptionFactory;
 
-	private final String failedNotNullCause = "it is null";
-
-	private final ExceptionInfo<?> generalExceptionInfo;
-
-	private final ExceptionInfo<?> nullExceptionInfo;
+	private final ExceptionFactory<?> nullExceptionFactory;
 
 	public ObjectVerifier(String category,
-			@Nonnull ExceptionFactory exceptionFactory,
-			@Nonnull ExceptionInfo<?> generalExceptionInfo,
-			@Nonnull ExceptionInfo<?> nullExceptionInfo) {
+			@Nonnull ExceptionMessageInfo defaultExceptionMessageInfo,
+			@Nonnull ExceptionTypeInfo<?> generalExceptionTypeInfo,
+			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo) {
 		super();
 		this.category = category;
-		this.exceptionFactory = exceptionFactory;
-		this.generalExceptionInfo = generalExceptionInfo;
-		this.nullExceptionInfo = nullExceptionInfo;
+		this.defaultExceptionMessageInfo = defaultExceptionMessageInfo;
+		generalExceptionFactory = ExceptionFactory.of(category,
+				generalExceptionTypeInfo,
+				defaultExceptionMessageInfo.appendCause(FAILED_IS_TRUE_CAUSE));
+		nullExceptionFactory = ExceptionFactory.of(category,
+				nullExceptionTypeInfo,
+				defaultExceptionMessageInfo.appendCause(FAILED_NOT_NULL_CAUSE));
 	}
 
 	public final void isTrue(boolean expression) {
 		if (isDisabled() || expression) {
 			return;
 		}
-		fail(generalExceptionInfo, failedIsTrueCause);
+		throw generalExceptionFactory.newException();
 	}
 
 	public final void isTrue(boolean expression, Object errorMessage) {
 		if (isDisabled() || expression) {
 			return;
 		}
-		fail(generalExceptionInfo, failedIsTrueCause, errorMessage);
+		throw generalExceptionFactory.newException(errorMessage);
 	}
 
 	public final void isTrue(boolean expression, String errorMessageTemplate,
@@ -57,22 +51,22 @@ public class ObjectVerifier extends AVerifier {
 		if (isDisabled() || expression) {
 			return;
 		}
-		fail(generalExceptionInfo, errorMessageTemplate, locale,
-				errorMessageArgs);
+		throw generalExceptionFactory.newException(errorMessageTemplate,
+				locale, errorMessageArgs);
 	}
 
 	public final <T> T notNull(@Nonnull T object) {
 		if (isDisabled() || object != null) {
 			return object;
 		}
-		throw exception(nullExceptionInfo, failedNotNullCause);
+		throw nullExceptionFactory.newException();
 	}
 
 	public final <T> T notNull(@Nonnull T object, Object errorMessage) {
 		if (isDisabled() || object != null) {
 			return object;
 		}
-		throw exception(nullExceptionInfo, failedNotNullCause, errorMessage);
+		throw nullExceptionFactory.newException(errorMessage);
 	}
 
 	public final <T> T notNull(@Nonnull T object, String errorMessageTemplate,
@@ -80,14 +74,13 @@ public class ObjectVerifier extends AVerifier {
 		if (isDisabled() || object != null) {
 			return object;
 		}
-		throw exception(nullExceptionInfo, errorMessageTemplate, locale,
+		throw nullExceptionFactory.newException(errorMessageTemplate, locale,
 				errorMessageArgs);
 	}
 
-	@Override
 	@Nonnull
-	public final ExceptionFactory getExceptionFactory() {
-		return exceptionFactory;
+	public ExceptionMessageInfo getDefaultExceptionMessageInfo() {
+		return defaultExceptionMessageInfo;
 	}
 
 	@Override

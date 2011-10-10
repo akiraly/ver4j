@@ -16,21 +16,21 @@ public class CompositeVerifier extends ObjectVerifier {
 	public final FileVerifier file;
 
 	public CompositeVerifier(String category,
-			@Nonnull ExceptionFactory exceptionFactory,
-			@Nonnull ExceptionInfo<?> generalExceptionInfo,
-			@Nonnull ExceptionInfo<?> nullExceptionInfo) {
-		this(category, exceptionFactory, generalExceptionInfo,
-				nullExceptionInfo, null, null, null, null);
+			@Nonnull ExceptionMessageInfo defaultExceptionMessageInfo,
+			@Nonnull ExceptionTypeInfo<?> generalExceptionTypeInfo,
+			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo) {
+		this(category, defaultExceptionMessageInfo, generalExceptionTypeInfo,
+				nullExceptionTypeInfo, null, null, null, null);
 	}
 
 	public CompositeVerifier(String category,
-			@Nonnull ExceptionFactory exceptionFactory,
-			@Nonnull ExceptionInfo<?> generalExceptionInfo,
-			@Nonnull ExceptionInfo<?> nullExceptionInfo, TextVerifier text,
-			NumberVerifier number, CollectionAndArrayVerifier collection,
-			FileVerifier file) {
-		super(category, exceptionFactory, generalExceptionInfo,
-				nullExceptionInfo);
+			@Nonnull ExceptionMessageInfo defaultExceptionMessageInfo,
+			@Nonnull ExceptionTypeInfo<?> generalExceptionTypeInfo,
+			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo,
+			TextVerifier text, NumberVerifier number,
+			CollectionAndArrayVerifier collection, FileVerifier file) {
+		super(category, defaultExceptionMessageInfo, generalExceptionTypeInfo,
+				nullExceptionTypeInfo);
 
 		this.text = text != null ? text : new TextVerifier(this);
 

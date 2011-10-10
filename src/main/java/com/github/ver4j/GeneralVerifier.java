@@ -37,12 +37,6 @@ public class GeneralVerifier extends AVerifier {
 	}
 
 	@Override
-	@Nonnull
-	public ExceptionFactory getExceptionFactory() {
-		return arg.getExceptionFactory();
-	}
-
-	@Override
 	public void setDisabled(boolean disabled) {
 		super.setDisabled(disabled);
 		arg.setDisabled(disabled);

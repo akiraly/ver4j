@@ -9,9 +9,9 @@ import com.github.ver4j.arg.exception.NullPointerArgumentException;
 
 public class ObjectVerifierTest {
 	private final ObjectVerifier verifier = new ObjectVerifier(null,
-			new ExceptionFactory("Test check"),
-			ExceptionInfo.of(ArgumentVerificationException.class),
-			ExceptionInfo.of(NullPointerArgumentException.class));
+			new ExceptionMessageInfo("Test"),
+			ExceptionTypeInfo.of(ArgumentVerificationException.class),
+			ExceptionTypeInfo.of(NullPointerArgumentException.class));
 
 	@Test
 	public void testIsTrueWithTrue() {

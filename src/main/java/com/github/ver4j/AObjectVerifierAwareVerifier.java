@@ -19,10 +19,4 @@ public abstract class AObjectVerifierAwareVerifier extends AVerifier {
 	public final String getCategory() {
 		return objectVerifier.getCategory();
 	}
-
-	@Override
-	@Nonnull
-	public final ExceptionFactory getExceptionFactory() {
-		return objectVerifier.getExceptionFactory();
-	}
 }
