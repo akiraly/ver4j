@@ -1,99 +1,66 @@
 package com.github.ver4j;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import com.github.ver4j.ExceptionFactory;
-import com.github.ver4j.IVerificationException;
-import com.github.ver4j.IVerifier;
-
 public class ExceptionFactoryTest {
-	private static class TestVerificationException extends RuntimeException
-			implements IVerificationException {
-		private static final long serialVersionUID = 1L;
-
-		private final String category;
-
-		public TestVerificationException(String message, String category) {
-			super(message);
-			this.category = category;
-		}
-
-		@Override
-		public final String getCategory() {
-			return category;
-		}
-
-		@Override
-		public String toString() {
-			if (category != null) {
-				return '[' + category + ']' + super.toString();
-			}
-
-			return super.toString();
-		}
-	}
-
-	private static class BrokenTestVerificationException extends
-			TestVerificationException {
-		private static final long serialVersionUID = 1L;
-
-		public BrokenTestVerificationException(String message) {
-			super(message, null);
-		}
-	}
-
-	private static class BrokenTestVerificationException2 extends
-			TestVerificationException {
-		private static final long serialVersionUID = 1L;
-
-		public BrokenTestVerificationException2(String message, String category) {
-			super(message, category);
-			throw new UnsupportedOperationException("You shouldn't use me.");
-		}
-	}
-
 	private static class DummyVerifier implements IVerifier {
+		private final ExceptionFactory exceptionFactory;
+
+		public DummyVerifier(ExceptionFactory exceptionFactory) {
+			super();
+			this.exceptionFactory = exceptionFactory;
+		}
+
 		@Override
 		public String getCategory() {
-			return null;
+			return "category";
 		}
 
 		@Override
-		public boolean isEnabled() {
-			return true;
+		public boolean isDisabled() {
+			return false;
 		}
 
 		@Override
-		public void setEnabled(boolean enabled) {
+		public void setDisabled(boolean disabled) {
 			// no-op
 		}
+
+		@Override
+		public ExceptionFactory getExceptionFactory() {
+			return exceptionFactory;
+		}
 	}
 
-	@Test(expected = TestVerificationException.class)
+	@Test
 	public void testWithCorrectExceptionType() {
-		ExceptionFactory<TestVerificationException> exceptionFactory = new ExceptionFactory<TestVerificationException>(
-				TestVerificationException.class, "Failed.");
-		exceptionFactory.throwException(new DummyVerifier(), null, null,
-				new Object[] { 1, 2 });
-	}
+		ExceptionFactory exceptionFactory = new ExceptionFactory("Test");
+		ExceptionInfo<TestVerificationException> exceptionInfo = new ExceptionInfo<TestVerificationException>(
+				TestVerificationException.class);
 
-	@Test(expected = IllegalStateException.class)
-	public void testWithBrokenExceptionType() {
-		new ExceptionFactory<BrokenTestVerificationException>(
-				BrokenTestVerificationException.class, "Failed.");
+		TestVerificationException exception = exceptionFactory.createException(
+				new DummyVerifier(exceptionFactory), exceptionInfo, null, null,
+				new Object[] { 1, 2 });
+
+		Assert.assertNotNull(exception);
+		Assert.assertNotNull(exception.getMessage());
+		Assert.assertNotNull(exception.getCategory());
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testWithBrokenExceptionType2() {
-		ExceptionFactory<BrokenTestVerificationException2> exceptionFactory;
+		ExceptionFactory exceptionFactory = new ExceptionFactory("Test");
+		ExceptionInfo<BrokenTestVerificationException2> exceptionInfo;
+
 		try {
-			exceptionFactory = new ExceptionFactory<BrokenTestVerificationException2>(
-					BrokenTestVerificationException2.class, "Failed.");
+			exceptionInfo = new ExceptionInfo<BrokenTestVerificationException2>(
+					BrokenTestVerificationException2.class);
 		} catch (IllegalStateException e) {
 			throw new RuntimeException(e);
 		}
-		exceptionFactory.throwException(new DummyVerifier(), null, null,
-				new Object[] { 1, 2 });
+		exceptionFactory.createException(new DummyVerifier(exceptionFactory),
+				exceptionInfo, null, null, new Object[] { 1, 2 });
 	}
 
 }

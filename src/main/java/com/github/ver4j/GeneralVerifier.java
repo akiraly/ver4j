@@ -37,10 +37,16 @@ public class GeneralVerifier extends AVerifier {
 	}
 
 	@Override
-	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
-		arg.setEnabled(enabled);
-		state.setEnabled(enabled);
-		result.setEnabled(enabled);
+	@Nonnull
+	public ExceptionFactory getExceptionFactory() {
+		return arg.getExceptionFactory();
+	}
+
+	@Override
+	public void setDisabled(boolean disabled) {
+		super.setDisabled(disabled);
+		arg.setDisabled(disabled);
+		state.setDisabled(disabled);
+		result.setDisabled(disabled);
 	}
 }

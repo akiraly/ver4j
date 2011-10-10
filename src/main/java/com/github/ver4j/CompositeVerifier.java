@@ -16,18 +16,21 @@ public class CompositeVerifier extends ObjectVerifier {
 	public final FileVerifier file;
 
 	public CompositeVerifier(String category,
-			@Nonnull ExceptionFactory<?> generalExceptionFactory,
-			@Nonnull ExceptionFactory<?> nullExceptionFactory) {
-		this(category, generalExceptionFactory, nullExceptionFactory, null,
-				null, null, null);
+			@Nonnull ExceptionFactory exceptionFactory,
+			@Nonnull ExceptionInfo<?> generalExceptionInfo,
+			@Nonnull ExceptionInfo<?> nullExceptionInfo) {
+		this(category, exceptionFactory, generalExceptionInfo,
+				nullExceptionInfo, null, null, null, null);
 	}
 
 	public CompositeVerifier(String category,
-			@Nonnull ExceptionFactory<?> generalExceptionFactory,
-			@Nonnull ExceptionFactory<?> nullExceptionFactory,
-			TextVerifier text, NumberVerifier number,
-			CollectionAndArrayVerifier collection, FileVerifier file) {
-		super(category, generalExceptionFactory, nullExceptionFactory);
+			@Nonnull ExceptionFactory exceptionFactory,
+			@Nonnull ExceptionInfo<?> generalExceptionInfo,
+			@Nonnull ExceptionInfo<?> nullExceptionInfo, TextVerifier text,
+			NumberVerifier number, CollectionAndArrayVerifier collection,
+			FileVerifier file) {
+		super(category, exceptionFactory, generalExceptionInfo,
+				nullExceptionInfo);
 
 		this.text = text != null ? text : new TextVerifier(this);
 
@@ -40,11 +43,11 @@ public class CompositeVerifier extends ObjectVerifier {
 	}
 
 	@Override
-	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
-		text.setEnabled(enabled);
-		number.setEnabled(enabled);
-		collection.setEnabled(enabled);
-		file.setEnabled(enabled);
+	public void setDisabled(boolean disabled) {
+		super.setDisabled(disabled);
+		text.setDisabled(disabled);
+		number.setDisabled(disabled);
+		collection.setDisabled(disabled);
+		file.setDisabled(disabled);
 	}
 }

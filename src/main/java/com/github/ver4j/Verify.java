@@ -30,7 +30,7 @@ public class Verify {
 		return CATEGORIZER.getVerifyer(category);
 	}
 
-	public static final void setEnabled(boolean enabled) {
-		CATEGORIZER.setEnabled(enabled);
+	public static final void setDisabled(boolean disabled) {
+		CATEGORIZER.setDisabled(disabled);
 	}
 }

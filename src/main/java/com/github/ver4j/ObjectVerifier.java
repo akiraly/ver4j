@@ -7,76 +7,87 @@ import javax.annotation.Nonnull;
 public class ObjectVerifier extends AVerifier {
 	private final String category;
 
-	private final ExceptionFactory<?> generalExceptionFactory;
+	/**
+	 * Consider this:
+	 * 
+	 * ${type} (%s) failed verification because {cause}.
+	 * 
+	 * arg/state/return (myVar) failed verification because it is null.
+	 * 
+	 * This could reduce our need for one exception factory per type (composite
+	 * verifier).
+	 */
+	private final ExceptionFactory exceptionFactory;
 
-	private final ExceptionFactory<?> nullExceptionFactory;
+	private final String failedIsTrueCause = "it is false";
+
+	private final String failedNotNullCause = "it is null";
+
+	private final ExceptionInfo<?> generalExceptionInfo;
+
+	private final ExceptionInfo<?> nullExceptionInfo;
 
 	public ObjectVerifier(String category,
-			@Nonnull ExceptionFactory<?> generalExceptionFactory,
-			@Nonnull ExceptionFactory<?> nullExceptionFactory) {
+			@Nonnull ExceptionFactory exceptionFactory,
+			@Nonnull ExceptionInfo<?> generalExceptionInfo,
+			@Nonnull ExceptionInfo<?> nullExceptionInfo) {
 		super();
 		this.category = category;
-		this.generalExceptionFactory = generalExceptionFactory;
-		this.nullExceptionFactory = nullExceptionFactory;
+		this.exceptionFactory = exceptionFactory;
+		this.generalExceptionInfo = generalExceptionInfo;
+		this.nullExceptionInfo = nullExceptionInfo;
 	}
 
 	public final void isTrue(boolean expression) {
-		if (!isEnabled()) {
+		if (isDisabled() || expression) {
 			return;
 		}
-		verifyTrue(expression, generalExceptionFactory);
+		fail(generalExceptionInfo, failedIsTrueCause);
 	}
 
 	public final void isTrue(boolean expression, Object errorMessage) {
-		if (!isEnabled()) {
+		if (isDisabled() || expression) {
 			return;
 		}
-		verifyTrue(expression, generalExceptionFactory, errorMessage);
+		fail(generalExceptionInfo, failedIsTrueCause, errorMessage);
 	}
 
 	public final void isTrue(boolean expression, String errorMessageTemplate,
 			Locale locale, Object... errorMessageArgs) {
-		if (!isEnabled()) {
+		if (isDisabled() || expression) {
 			return;
 		}
-		verifyTrue(expression, generalExceptionFactory, errorMessageTemplate,
-				locale, errorMessageArgs);
+		fail(generalExceptionInfo, errorMessageTemplate, locale,
+				errorMessageArgs);
 	}
 
 	public final <T> T notNull(@Nonnull T object) {
-		if (!isEnabled()) {
+		if (isDisabled() || object != null) {
 			return object;
 		}
-		verifyTrue(object != null, nullExceptionFactory);
-		return object;
+		throw exception(nullExceptionInfo, failedNotNullCause);
 	}
 
 	public final <T> T notNull(@Nonnull T object, Object errorMessage) {
-		if (!isEnabled()) {
+		if (isDisabled() || object != null) {
 			return object;
 		}
-		verifyTrue(object != null, nullExceptionFactory, errorMessage);
-		return object;
+		throw exception(nullExceptionInfo, failedNotNullCause, errorMessage);
 	}
 
 	public final <T> T notNull(@Nonnull T object, String errorMessageTemplate,
 			Locale locale, Object... errorMessageArgs) {
-		if (!isEnabled()) {
+		if (isDisabled() || object != null) {
 			return object;
 		}
-		verifyTrue(object != null, nullExceptionFactory, errorMessageTemplate,
-				locale, errorMessageArgs);
-		return object;
+		throw exception(nullExceptionInfo, errorMessageTemplate, locale,
+				errorMessageArgs);
 	}
 
+	@Override
 	@Nonnull
-	protected ExceptionFactory<?> getGeneralExceptionFactory() {
-		return generalExceptionFactory;
-	}
-
-	@Nonnull
-	protected ExceptionFactory<?> getNullExceptionFactory() {
-		return nullExceptionFactory;
+	public final ExceptionFactory getExceptionFactory() {
+		return exceptionFactory;
 	}
 
 	@Override

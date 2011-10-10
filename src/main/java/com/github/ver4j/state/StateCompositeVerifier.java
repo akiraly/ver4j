@@ -9,6 +9,7 @@ import org.apache.commons.lang3.CharEncoding;
 
 import com.github.ver4j.CompositeVerifier;
 import com.github.ver4j.ExceptionFactory;
+import com.github.ver4j.ExceptionInfo;
 import com.github.ver4j.state.exception.NullPointerStateException;
 import com.github.ver4j.state.exception.StateVerificationException;
 
@@ -16,10 +17,9 @@ public class StateCompositeVerifier extends CompositeVerifier {
 
 	public StateCompositeVerifier(String category) {
 		super(category, //
-				ExceptionFactory.of(StateVerificationException.class,
-						"State (%s) failed verification."), //
-				ExceptionFactory.of(NullPointerStateException.class,
-						"State (%s) should not be null.") //
+				new ExceptionFactory("State"), //
+				ExceptionInfo.of(StateVerificationException.class), //
+				ExceptionInfo.of(NullPointerStateException.class) //
 		);
 	}
 

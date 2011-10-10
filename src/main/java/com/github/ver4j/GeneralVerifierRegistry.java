@@ -28,11 +28,11 @@ public class GeneralVerifierRegistry {
 		return result;
 	}
 
-	public void setEnabled(boolean enabled) {
-		global.setEnabled(enabled);
+	public void setDisabled(boolean disabled) {
+		global.setDisabled(disabled);
 
 		for (GeneralVerifier verifier : verifiers.values()) {
-			verifier.setEnabled(enabled);
+			verifier.setDisabled(disabled);
 		}
 	}
 

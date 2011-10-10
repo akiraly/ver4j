@@ -4,16 +4,14 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.github.ver4j.ExceptionFactory;
-import com.github.ver4j.ObjectVerifier;
 import com.github.ver4j.arg.exception.ArgumentVerificationException;
 import com.github.ver4j.arg.exception.NullPointerArgumentException;
 
 public class ObjectVerifierTest {
-	private final ObjectVerifier verifier = new ObjectVerifier(
-			null,
-			ExceptionFactory.of(ArgumentVerificationException.class, "Failed."),
-			ExceptionFactory.of(NullPointerArgumentException.class, "Failed."));
+	private final ObjectVerifier verifier = new ObjectVerifier(null,
+			new ExceptionFactory("Test check"),
+			ExceptionInfo.of(ArgumentVerificationException.class),
+			ExceptionInfo.of(NullPointerArgumentException.class));
 
 	@Test
 	public void testIsTrueWithTrue() {
@@ -24,7 +22,7 @@ public class ObjectVerifierTest {
 
 	@Test
 	public void testIsTrueWithFalseDisabled() {
-		verifier.setEnabled(false);
+		verifier.setDisabled(true);
 		verifier.isTrue(false);
 		verifier.isTrue(false, "");
 		verifier.isTrue(false, "", null);
@@ -54,7 +52,7 @@ public class ObjectVerifierTest {
 
 	@Test
 	public void testNotNullWithNullDisabled() {
-		verifier.setEnabled(false);
+		verifier.setDisabled(true);
 		Assert.assertEquals(null, verifier.notNull(null));
 		Assert.assertEquals(null, verifier.notNull(null, ""));
 		Assert.assertEquals(null, verifier.notNull(null, "", null));

@@ -1,8 +1,13 @@
 package com.github.ver4j;
 
+import javax.annotation.Nonnull;
+
 public interface IVerifier extends ICategorized {
 
-	boolean isEnabled();
+	boolean isDisabled();
 
-	void setEnabled(boolean enabled);
+	void setDisabled(boolean disabled);
+
+	@Nonnull
+	ExceptionFactory getExceptionFactory();
 }
