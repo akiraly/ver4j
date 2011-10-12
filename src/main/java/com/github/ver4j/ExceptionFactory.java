@@ -38,7 +38,7 @@ public class ExceptionFactory<T extends RuntimeException & IVerificationExceptio
 		return createException(locale, errorMessageTemplate, errorMessageArgs);
 	}
 
-	protected T createException(@Nonnull Locale locale, String messageTemplate,
+	protected T createException(Locale locale, String messageTemplate,
 			Object[] messageTemplateArgs) {
 		String message = messageInfo.createMessage(locale, messageTemplate,
 				messageTemplateArgs);
