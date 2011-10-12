@@ -6,30 +6,30 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.CharEncoding;
 
-public class JvmSupportExceptionFactory {
+public class JvmSupportErrorFactory {
 
 	@Nonnull
-	public SupportException of(CloneNotSupportedException cause) {
-		return new SupportException(
+	public SupportError of(CloneNotSupportedException cause) {
+		return new SupportError(
 				"Not supported cloning on a clone() implementing class instance?!",
 				cause);
 	}
 
 	@Nonnull
-	public SupportException of(@Nonnull String encoding,
+	public SupportError of(@Nonnull String encoding,
 			UnsupportedEncodingException cause) {
-		return new SupportException("Not supported jvm encoding (" + encoding
+		return new SupportError("Not supported jvm encoding (" + encoding
 				+ ")?!", cause);
 	}
 
 	@Nonnull
-	public final SupportException ofUtf8Encoding(
+	public final SupportError ofUtf8Encoding(
 			UnsupportedEncodingException cause) {
 		return of(CharEncoding.UTF_8, cause);
 	}
 
 	@Nonnull
-	public final SupportException ofIso88591Encoding(
+	public final SupportError ofIso88591Encoding(
 			UnsupportedEncodingException cause) {
 		return of(CharEncoding.ISO_8859_1, cause);
 	}
