@@ -25,15 +25,15 @@ public class ExceptionFactory<T extends RuntimeException & IVerificationExceptio
 		return new ExceptionFactory<T>(category, typeInfo, messageInfo);
 	}
 
-	public T newException() {
+	public final T newException() {
 		return createException(null, null, new Object[] { null });
 	}
 
-	public T newException(Object errorMessage) {
+	public final T newException(Object errorMessage) {
 		return createException(null, null, new Object[] { errorMessage });
 	}
 
-	public T newException(String errorMessageTemplate, Locale locale,
+	public final T newException(String errorMessageTemplate, Locale locale,
 			Object[] errorMessageArgs) {
 		return createException(locale, errorMessageTemplate, errorMessageArgs);
 	}

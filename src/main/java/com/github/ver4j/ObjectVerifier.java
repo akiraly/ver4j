@@ -13,7 +13,7 @@ public class ObjectVerifier extends AVerifier {
 
 	private final ExceptionMessageInfo defaultExceptionMessageInfo;
 
-	private final ExceptionFactory<?> generalExceptionFactory;
+	private final ExceptionFactory<?> isTrueExceptionFactory;
 
 	private final ExceptionFactory<?> nullExceptionFactory;
 
@@ -21,10 +21,9 @@ public class ObjectVerifier extends AVerifier {
 			@Nonnull ExceptionMessageInfo defaultExceptionMessageInfo,
 			@Nonnull ExceptionTypeInfo<?> generalExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo) {
-		super();
 		this.category = category;
 		this.defaultExceptionMessageInfo = defaultExceptionMessageInfo;
-		generalExceptionFactory = ExceptionFactory.of(category,
+		isTrueExceptionFactory = ExceptionFactory.of(category,
 				generalExceptionTypeInfo,
 				defaultExceptionMessageInfo.appendCause(FAILED_IS_TRUE_CAUSE));
 		nullExceptionFactory = ExceptionFactory.of(category,
@@ -36,14 +35,14 @@ public class ObjectVerifier extends AVerifier {
 		if (isDisabled() || expression) {
 			return;
 		}
-		throw generalExceptionFactory.newException();
+		throw isTrueExceptionFactory.newException();
 	}
 
 	public final void isTrue(boolean expression, Object errorMessage) {
 		if (isDisabled() || expression) {
 			return;
 		}
-		throw generalExceptionFactory.newException(errorMessage);
+		throw isTrueExceptionFactory.newException(errorMessage);
 	}
 
 	public final void isTrue(boolean expression, String errorMessageTemplate,
@@ -51,8 +50,8 @@ public class ObjectVerifier extends AVerifier {
 		if (isDisabled() || expression) {
 			return;
 		}
-		throw generalExceptionFactory.newException(errorMessageTemplate,
-				locale, errorMessageArgs);
+		throw isTrueExceptionFactory.newException(errorMessageTemplate, locale,
+				errorMessageArgs);
 	}
 
 	public final <T> T notNull(@Nonnull T object) {

@@ -77,7 +77,7 @@ active comment. This library helps doing that in Java.
 					<version>2.3.2</version>
 					<configuration>
 						<source>1.6</source>
-						<target>1.5</target>
+						<target>1.6</target>
 						<debug>true</debug>
 						<optimize>true</optimize>
 						<showDeprecation>true</showDeprecation>
@@ -89,6 +89,15 @@ active comment. This library helps doing that in Java.
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.10</version>
+					<configuration>
+						<parallel>both</parallel>
+						<threadCount>1</threadCount>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>

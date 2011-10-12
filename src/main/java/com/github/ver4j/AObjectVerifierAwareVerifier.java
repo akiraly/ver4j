@@ -11,7 +11,7 @@ public abstract class AObjectVerifierAwareVerifier extends AVerifier {
 	}
 
 	@Nonnull
-	protected final ObjectVerifier getObjectVerifier() {
+	protected final ObjectVerifier object() {
 		return objectVerifier;
 	}
 
