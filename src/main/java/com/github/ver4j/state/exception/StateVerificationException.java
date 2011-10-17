@@ -1,9 +1,11 @@
 package com.github.ver4j.state.exception;
 
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
+
 import com.github.ver4j.IVerificationException;
 
-public class StateVerificationException extends IllegalStateException implements
-		IVerificationException {
+public class StateVerificationException extends ContextedRuntimeException
+		implements IVerificationException {
 	private static final long serialVersionUID = 1L;
 
 	private final String category;

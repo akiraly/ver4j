@@ -1,8 +1,10 @@
 package com.github.ver4j.arg.exception;
 
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
+
 import com.github.ver4j.IVerificationException;
 
-public class ArgumentVerificationException extends IllegalArgumentException
+public class ArgumentVerificationException extends ContextedRuntimeException
 		implements IVerificationException {
 	private static final long serialVersionUID = 1L;
 

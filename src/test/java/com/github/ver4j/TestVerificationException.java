@@ -1,6 +1,8 @@
 package com.github.ver4j;
 
-class TestVerificationException extends RuntimeException implements
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
+
+class TestVerificationException extends ContextedRuntimeException implements
 		IVerificationException {
 	private static final long serialVersionUID = 1L;
 

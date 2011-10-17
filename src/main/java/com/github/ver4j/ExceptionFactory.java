@@ -2,10 +2,13 @@ package com.github.ver4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-public class ExceptionFactory<T extends RuntimeException & IVerificationException>
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
+
+public class ExceptionFactory<T extends ContextedRuntimeException & IVerificationException>
 		implements ICategorized {
 	private final String category;
 	private final ExceptionTypeInfo<T> typeInfo;
@@ -19,31 +22,66 @@ public class ExceptionFactory<T extends RuntimeException & IVerificationExceptio
 		this.messageInfo = messageInfo;
 	}
 
-	public static final <T extends RuntimeException & IVerificationException> ExceptionFactory<T> of(
+	public static final <T extends ContextedRuntimeException & IVerificationException> ExceptionFactory<T> of(
 			String category, @Nonnull ExceptionTypeInfo<T> typeInfo,
 			@Nonnull ExceptionMessageInfo messageInfo) {
 		return new ExceptionFactory<T>(category, typeInfo, messageInfo);
 	}
 
 	public final T newException() {
-		return createException(null, null, new Object[] { null });
+		return newException(null);
 	}
 
-	public final T newException(Object errorMessage) {
-		return createException(null, null, new Object[] { errorMessage });
+	public final T newException(Map<?, ?> autoArgs) {
+		return createException(null, null, new Object[] { null }, autoArgs);
 	}
 
-	public final T newException(String errorMessageTemplate, Locale locale,
+	public final T newException(Object errorMessage, Object[] errorMessageArgs) {
+		return newException(errorMessage, errorMessageArgs, null);
+	}
+
+	public final T newException(Object errorMessage, Object[] errorMessageArgs,
+			Map<?, ?> autoArgs) {
+		Object arg;
+		if (errorMessage != null && errorMessageArgs != null) {
+			String formattedErrorMessage = String.format(
+					errorMessage.toString(), messageInfo.getDefaultLocale(),
+					errorMessageArgs);
+			arg = formattedErrorMessage;
+		} else {
+			arg = errorMessage;
+		}
+
+		return createException(null, null, new Object[] { arg }, autoArgs);
+	}
+
+	public final T newExceptionCm(String errorMessageTemplate, Locale locale,
 			Object[] errorMessageArgs) {
-		return createException(locale, errorMessageTemplate, errorMessageArgs);
+		return newExceptionCm(errorMessageTemplate, locale, errorMessageArgs,
+				null);
+	}
+
+	public final T newExceptionCm(String errorMessageTemplate, Locale locale,
+			Object[] errorMessageArgs, Map<?, ?> autoArgs) {
+		return createException(locale, errorMessageTemplate, errorMessageArgs,
+				autoArgs);
 	}
 
 	protected T createException(Locale locale, String messageTemplate,
-			Object[] messageTemplateArgs) {
+			Object[] messageTemplateArgs, Map<?, ?> autoArgs) {
 		String message = messageInfo.createMessage(locale, messageTemplate,
 				messageTemplateArgs);
 		try {
-			return typeInfo.create(message, category);
+			T result = typeInfo.create(message, category);
+
+			if (autoArgs != null) {
+				for (Map.Entry<?, ?> entry : autoArgs.entrySet()) {
+					result.addContextValue(String.valueOf(entry.getKey()),
+							entry.getValue());
+				}
+			}
+
+			return result;
 		} catch (InstantiationException e) {
 			throw failException(message, e);
 		} catch (IllegalAccessException e) {

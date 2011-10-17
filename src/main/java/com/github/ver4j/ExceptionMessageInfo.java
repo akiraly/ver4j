@@ -11,8 +11,8 @@ public class ExceptionMessageInfo {
 	@Nonnull
 	private final Locale defaultLocale;
 
-	public ExceptionMessageInfo(@Nonnull String prefix) {
-		this(prefix + " (%s) failed verification because ", Locale.ENGLISH);
+	public ExceptionMessageInfo(@Nonnull String kind) {
+		this("{%s} " + kind + " verification failed because ", Locale.ENGLISH);
 	}
 
 	public ExceptionMessageInfo(@Nonnull String defaultMessageTemplate,
