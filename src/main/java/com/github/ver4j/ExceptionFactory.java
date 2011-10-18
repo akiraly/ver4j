@@ -6,9 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.exception.ContextedRuntimeException;
-
-public class ExceptionFactory<T extends ContextedRuntimeException & IVerificationException>
+public class ExceptionFactory<T extends GeneralVerificationException>
 		implements ICategorized {
 	private final String category;
 	private final ExceptionTypeInfo<T> typeInfo;
@@ -22,7 +20,7 @@ public class ExceptionFactory<T extends ContextedRuntimeException & IVerificatio
 		this.messageInfo = messageInfo;
 	}
 
-	public static final <T extends ContextedRuntimeException & IVerificationException> ExceptionFactory<T> of(
+	public static final <T extends GeneralVerificationException> ExceptionFactory<T> of(
 			String category, @Nonnull ExceptionTypeInfo<T> typeInfo,
 			@Nonnull ExceptionMessageInfo messageInfo) {
 		return new ExceptionFactory<T>(category, typeInfo, messageInfo);

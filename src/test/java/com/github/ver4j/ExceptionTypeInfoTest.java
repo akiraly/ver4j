@@ -18,7 +18,7 @@ public class ExceptionTypeInfoTest {
 				category);
 
 		Assert.assertNotNull(exception);
-		Assert.assertEquals(message, exception.getMessage());
+		Assert.assertEquals(message, exception.getRawMessage());
 		Assert.assertEquals(category, exception.getCategory());
 	}
 

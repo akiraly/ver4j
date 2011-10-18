@@ -12,7 +12,7 @@ public class ExceptionMessageInfo {
 	private final Locale defaultLocale;
 
 	public ExceptionMessageInfo(@Nonnull String kind) {
-		this("{%s} " + kind + " verification failed because ", Locale.ENGLISH);
+		this("[%s] " + kind + " verification failed because ", Locale.ENGLISH);
 	}
 
 	public ExceptionMessageInfo(@Nonnull String defaultMessageTemplate,

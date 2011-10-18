@@ -5,10 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.exception.ContextedRuntimeException;
-
 @Nonnull
-public class ExceptionTypeInfo<T extends ContextedRuntimeException & IVerificationException> {
+public class ExceptionTypeInfo<T extends GeneralVerificationException> {
 	private final Class<T> type;
 
 	private final Constructor<T> exceptionConstructor;
@@ -27,7 +25,7 @@ public class ExceptionTypeInfo<T extends ContextedRuntimeException & IVerificati
 		}
 	}
 
-	public static <T extends ContextedRuntimeException & IVerificationException> ExceptionTypeInfo<T> of(
+	public static <T extends GeneralVerificationException> ExceptionTypeInfo<T> of(
 			Class<T> exceptionType) {
 		return new ExceptionTypeInfo<T>(exceptionType);
 	}
