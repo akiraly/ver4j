@@ -30,7 +30,7 @@ public class TextVerifier extends AObjectVerifierAwareVerifier {
 						FAILED_NOT_BLANK_CAUSE));
 	}
 
-	public final <T extends CharSequence> void notEmpty(@Nonnull T text) {
+	public final void notEmpty(@Nonnull CharSequence text) {
 		object().notNull(text);
 		if (isDisabled() || text.length() > 0) {
 			return;
@@ -38,8 +38,8 @@ public class TextVerifier extends AObjectVerifierAwareVerifier {
 		throw notEmptyExceptionFactory.newException();
 	}
 
-	public final <T extends CharSequence> void notEmpty(@Nonnull T text,
-			Object errorMessage, Object... errorMessageArgs) {
+	public final void notEmpty(@Nonnull CharSequence text, Object errorMessage,
+			Object... errorMessageArgs) {
 		object().notNull(text, errorMessage, errorMessageArgs);
 		if (isDisabled() || text.length() > 0) {
 			return;
@@ -48,7 +48,7 @@ public class TextVerifier extends AObjectVerifierAwareVerifier {
 				errorMessageArgs);
 	}
 
-	public final <T extends CharSequence> void notEmptyCm(@Nonnull T text,
+	public final void notEmptyCm(@Nonnull CharSequence text,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
 		object().notNullCm(text, errorMessageTemplate, locale, errorMessageArgs);
@@ -59,15 +59,15 @@ public class TextVerifier extends AObjectVerifierAwareVerifier {
 				locale, errorMessageArgs);
 	}
 
-	public final <T extends CharSequence> void notBlank(@Nonnull T text) {
+	public final void notBlank(@Nonnull CharSequence text) {
 		if (isDisabled() || !StringUtils.isBlank(text)) {
 			return;
 		}
 		throw notBlankExceptionFactory.newException();
 	}
 
-	public final <T extends CharSequence> void notBlank(@Nonnull T text,
-			Object errorMessage, Object... errorMessageArgs) {
+	public final void notBlank(@Nonnull CharSequence text, Object errorMessage,
+			Object... errorMessageArgs) {
 		if (isDisabled() || !StringUtils.isBlank(text)) {
 			return;
 		}
@@ -75,11 +75,43 @@ public class TextVerifier extends AObjectVerifierAwareVerifier {
 				errorMessageArgs);
 	}
 
-	public final <T extends CharSequence> void notBlankCm(@Nonnull T text,
+	public final void notBlankCm(@Nonnull CharSequence text,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
 		if (isDisabled() || !StringUtils.isBlank(text)) {
 			return;
+		}
+		throw notBlankExceptionFactory.newExceptionCm(errorMessageTemplate,
+				locale, errorMessageArgs);
+	}
+
+	@Nonnull
+	public final String strippedNotNull(@Nonnull String text) {
+		String stripped = StringUtils.stripToNull(text);
+		if (isDisabled() || stripped != null) {
+			return stripped;
+		}
+		throw notBlankExceptionFactory.newException();
+	}
+
+	@Nonnull
+	public final String strippedNotNull(@Nonnull String text,
+			Object errorMessage, Object... errorMessageArgs) {
+		String stripped = StringUtils.stripToNull(text);
+		if (isDisabled() || stripped != null) {
+			return stripped;
+		}
+		throw notBlankExceptionFactory.newException(errorMessage,
+				errorMessageArgs);
+	}
+
+	@Nonnull
+	public final String strippedNotNullCm(@Nonnull String text,
+			String errorMessageTemplate, Locale locale,
+			Object... errorMessageArgs) {
+		String stripped = StringUtils.stripToNull(text);
+		if (isDisabled() || stripped != null) {
+			return stripped;
 		}
 		throw notBlankExceptionFactory.newExceptionCm(errorMessageTemplate,
 				locale, errorMessageArgs);

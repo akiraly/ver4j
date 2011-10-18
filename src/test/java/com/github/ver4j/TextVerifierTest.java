@@ -1,5 +1,7 @@
 package com.github.ver4j;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 import com.github.ver4j.arg.exception.ArgumentVerificationException;
@@ -93,5 +95,44 @@ public class TextVerifierTest {
 	@Test(expected = TextArgumentException.class)
 	public void testNotBlankCmWithFalse() {
 		verifier.notBlankCm(" ", "", null);
+	}
+
+	// strippedNotNull*
+
+	@Test
+	public void testStrippedNotNullWithTrue() {
+		Assert.assertEquals("a", verifier.strippedNotNull(" a "));
+		Assert.assertEquals("a", verifier.strippedNotNull(" a ", ""));
+		Assert.assertEquals("a", verifier.strippedNotNull(" a ", "%s", "1"));
+		Assert.assertEquals("a", verifier.strippedNotNullCm(" a ", "", null));
+	}
+
+	@Test
+	public void testStrippedNotNullWithFalseDisabled() {
+		verifier.setDisabled(true);
+		Assert.assertEquals(null, verifier.strippedNotNull(" "));
+		Assert.assertEquals(null, verifier.strippedNotNull(" ", ""));
+		Assert.assertEquals(null, verifier.strippedNotNull(" ", "%s", "1"));
+		Assert.assertEquals(null, verifier.strippedNotNullCm(" ", "", null));
+	}
+
+	@Test(expected = TextArgumentException.class)
+	public void testStrippedNotNullWithFalse1() {
+		verifier.strippedNotNull(" ");
+	}
+
+	@Test(expected = TextArgumentException.class)
+	public void testStrippedNotNullWithFalse2() {
+		verifier.strippedNotNull(" ", "");
+	}
+
+	@Test(expected = TextArgumentException.class)
+	public void testStrippedNotNullWithFalse3() {
+		verifier.strippedNotNull(" ", "%s", "1");
+	}
+
+	@Test(expected = TextArgumentException.class)
+	public void testStrippedNotNullCmWithFalse() {
+		verifier.strippedNotNullCm(" ", "", null);
 	}
 }
