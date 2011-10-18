@@ -6,6 +6,7 @@ import com.github.ver4j.ExceptionTypeInfo;
 import com.github.ver4j.arg.exception.ArgumentVerificationException;
 import com.github.ver4j.arg.exception.ClassCastArgumentException;
 import com.github.ver4j.arg.exception.NullPointerArgumentException;
+import com.github.ver4j.arg.exception.TextArgumentException;
 
 public class ArgCompositeVerifier extends CompositeVerifier {
 
@@ -14,7 +15,8 @@ public class ArgCompositeVerifier extends CompositeVerifier {
 				new ExceptionMessageInfo("argument"), //
 				ExceptionTypeInfo.of(ArgumentVerificationException.class), //
 				ExceptionTypeInfo.of(ClassCastArgumentException.class), //
-				ExceptionTypeInfo.of(NullPointerArgumentException.class) //
+				ExceptionTypeInfo.of(NullPointerArgumentException.class), //
+				ExceptionTypeInfo.of(TextArgumentException.class) //
 		);
 	}
 

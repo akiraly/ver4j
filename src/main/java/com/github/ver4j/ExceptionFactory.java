@@ -32,8 +32,8 @@ public class ExceptionFactory<T extends ContextedRuntimeException & IVerificatio
 		return newException(null);
 	}
 
-	public final T newException(Map<?, ?> autoArgs) {
-		return createException(null, null, new Object[] { null }, autoArgs);
+	public final T newException(Map<?, ?> ctxtArgs) {
+		return createException(null, null, new Object[] { null }, ctxtArgs);
 	}
 
 	public final T newException(Object errorMessage, Object[] errorMessageArgs) {
@@ -41,18 +41,16 @@ public class ExceptionFactory<T extends ContextedRuntimeException & IVerificatio
 	}
 
 	public final T newException(Object errorMessage, Object[] errorMessageArgs,
-			Map<?, ?> autoArgs) {
+			Map<?, ?> ctxtArgs) {
 		Object arg;
 		if (errorMessage != null && errorMessageArgs != null) {
-			String formattedErrorMessage = String.format(
-					errorMessage.toString(), messageInfo.getDefaultLocale(),
+			arg = messageInfo.createMessage(null, errorMessage.toString(),
 					errorMessageArgs);
-			arg = formattedErrorMessage;
 		} else {
 			arg = errorMessage;
 		}
 
-		return createException(null, null, new Object[] { arg }, autoArgs);
+		return createException(null, null, new Object[] { arg }, ctxtArgs);
 	}
 
 	public final T newExceptionCm(String errorMessageTemplate, Locale locale,
@@ -62,20 +60,20 @@ public class ExceptionFactory<T extends ContextedRuntimeException & IVerificatio
 	}
 
 	public final T newExceptionCm(String errorMessageTemplate, Locale locale,
-			Object[] errorMessageArgs, Map<?, ?> autoArgs) {
+			Object[] errorMessageArgs, Map<?, ?> ctxtArgs) {
 		return createException(locale, errorMessageTemplate, errorMessageArgs,
-				autoArgs);
+				ctxtArgs);
 	}
 
 	protected T createException(Locale locale, String messageTemplate,
-			Object[] messageTemplateArgs, Map<?, ?> autoArgs) {
+			Object[] messageTemplateArgs, Map<?, ?> ctxtArgs) {
 		String message = messageInfo.createMessage(locale, messageTemplate,
 				messageTemplateArgs);
 		try {
 			T result = typeInfo.create(message, category);
 
-			if (autoArgs != null) {
-				for (Map.Entry<?, ?> entry : autoArgs.entrySet()) {
+			if (ctxtArgs != null) {
+				for (Map.Entry<?, ?> entry : ctxtArgs.entrySet()) {
 					result.addContextValue(String.valueOf(entry.getKey()),
 							entry.getValue());
 				}

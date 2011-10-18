@@ -19,10 +19,11 @@ public class CompositeVerifier extends ObjectVerifier {
 			@Nonnull ExceptionMessageInfo defaultExceptionMessageInfo,
 			@Nonnull ExceptionTypeInfo<?> generalExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> classCastExceptionTypeInfo,
-			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo) {
+			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo,
+			@Nonnull ExceptionTypeInfo<?> textExceptionTypeInfo) {
 		this(category, defaultExceptionMessageInfo, generalExceptionTypeInfo,
-				classCastExceptionTypeInfo, nullExceptionTypeInfo, null, null,
-				null, null);
+				classCastExceptionTypeInfo, nullExceptionTypeInfo,
+				textExceptionTypeInfo, null, null, null, null);
 	}
 
 	public CompositeVerifier(String category,
@@ -30,12 +31,14 @@ public class CompositeVerifier extends ObjectVerifier {
 			@Nonnull ExceptionTypeInfo<?> generalExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> classCastExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo,
+			@Nonnull ExceptionTypeInfo<?> textExceptionTypeInfo,
 			TextVerifier text, NumberVerifier number,
 			CollectionAndArrayVerifier collection, FileVerifier file) {
 		super(category, defaultExceptionMessageInfo, generalExceptionTypeInfo,
 				classCastExceptionTypeInfo, nullExceptionTypeInfo);
 
-		this.text = text != null ? text : new TextVerifier(this);
+		this.text = text != null ? text : new TextVerifier(this,
+				textExceptionTypeInfo);
 
 		this.number = number != null ? number : new NumberVerifier(this);
 

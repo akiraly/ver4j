@@ -120,8 +120,8 @@ public class ObjectVerifier extends AVerifier {
 	public final void isAssignableFrom(@Nonnull Class<?> superType,
 			@Nonnull Class<?> type, Object errorMessage,
 			Object... errorMessageArgs) {
-		notNull(superType);
-		notNull(type);
+		notNull(superType, errorMessage, errorMessageArgs);
+		notNull(type, errorMessage, errorMessageArgs);
 		if (isDisabled() || superType.isAssignableFrom(type)) {
 			return;
 		}
@@ -132,8 +132,8 @@ public class ObjectVerifier extends AVerifier {
 	public final void isAssignableFromCm(@Nonnull Class<?> superType,
 			@Nonnull Class<?> type, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		notNull(superType);
-		notNull(type);
+		notNull(superType, errorMessageTemplate, locale, errorMessageArgs);
+		notNull(type, errorMessageTemplate, locale, errorMessageArgs);
 		if (isDisabled() || superType.isAssignableFrom(type)) {
 			return;
 		}
@@ -142,47 +142,62 @@ public class ObjectVerifier extends AVerifier {
 				newAssignableFromContext(superType, type));
 	}
 
+	@Nonnull
 	private final Map<Object, Object> newAssignableFromContext(
 			@Nonnull Class<?> superType, @Nonnull Class<?> type) {
 		Map<Object, Object> context = newContextMap();
-		context.put("reference type", superType);
-		context.put("tested type", type);
+		context.put("reference class", superType);
+		context.put("tested class", type);
 		return context;
 	}
 
+	@Nonnull
 	public final <T> T isInstanceOf(@Nonnull Class<T> type, @Nonnull Object obj) {
 		notNull(type);
 		notNull(obj);
 		if (isDisabled() || type.isInstance(obj)) {
 			return type.cast(obj);
 		}
-		throw isInstanceOfExceptionFactory.newException();
+		throw isInstanceOfExceptionFactory.newException(newInstanceOfContext(
+				type, obj));
 	}
 
+	@Nonnull
 	public final <T> T isInstanceOf(@Nonnull Class<T> type,
 			@Nonnull Object obj, Object errorMessage,
 			Object... errorMessageArgs) {
-		notNull(type);
-		notNull(obj);
+		notNull(type, errorMessage, errorMessageArgs);
+		notNull(obj, errorMessage, errorMessageArgs);
 		if (isDisabled() || type.isInstance(obj)) {
 			return type.cast(obj);
 		}
 		throw isInstanceOfExceptionFactory.newException(errorMessage,
-				errorMessageArgs);
+				errorMessageArgs, newInstanceOfContext(type, obj));
 	}
 
+	@Nonnull
 	public final <T> T isInstanceOfCm(@Nonnull Class<T> type,
 			@Nonnull Object obj, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		notNull(type);
-		notNull(obj);
+		notNullCm(type, errorMessageTemplate, locale, errorMessageArgs);
+		notNull(obj, errorMessageTemplate, locale, errorMessageArgs);
 		if (isDisabled() || type.isInstance(obj)) {
 			return type.cast(obj);
 		}
 		throw isInstanceOfExceptionFactory.newExceptionCm(errorMessageTemplate,
-				locale, errorMessageArgs);
+				locale, errorMessageArgs, newInstanceOfContext(type, obj));
 	}
 
+	@Nonnull
+	private final Map<Object, Object> newInstanceOfContext(
+			@Nonnull Class<?> type, @Nonnull Object obj) {
+		Map<Object, Object> context = newContextMap();
+		context.put("reference class", type);
+		context.put("tested class", obj);
+		return context;
+	}
+
+	@Nonnull
 	public final <T> T notNull(@Nonnull T object) {
 		if (isDisabled() || object != null) {
 			return object;
@@ -190,6 +205,7 @@ public class ObjectVerifier extends AVerifier {
 		throw nullExceptionFactory.newException();
 	}
 
+	@Nonnull
 	public final <T> T notNull(@Nonnull T object, Object errorMessage,
 			Object... errorMessageArgs) {
 		if (isDisabled() || object != null) {
@@ -198,6 +214,7 @@ public class ObjectVerifier extends AVerifier {
 		throw nullExceptionFactory.newException(errorMessage, errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <T> T notNullCm(@Nonnull T object,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {

@@ -6,6 +6,7 @@ import com.github.ver4j.ExceptionTypeInfo;
 import com.github.ver4j.result.exception.ClassCastResultException;
 import com.github.ver4j.result.exception.NullPointerResultException;
 import com.github.ver4j.result.exception.ResultVerificationException;
+import com.github.ver4j.result.exception.TextResultException;
 
 public class ResultCompositeVerifier extends CompositeVerifier {
 
@@ -14,7 +15,8 @@ public class ResultCompositeVerifier extends CompositeVerifier {
 				new ExceptionMessageInfo("result"), //
 				ExceptionTypeInfo.of(ResultVerificationException.class), //
 				ExceptionTypeInfo.of(ClassCastResultException.class), //
-				ExceptionTypeInfo.of(NullPointerResultException.class) //
+				ExceptionTypeInfo.of(NullPointerResultException.class), //
+				ExceptionTypeInfo.of(TextResultException.class) //
 		);
 	}
 
