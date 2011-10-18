@@ -13,15 +13,15 @@ public class ExceptionMessageInfoTest {
 	@Test
 	public void testMessageInfo() {
 		ExceptionMessageInfo messageInfo = new ExceptionMessageInfo("Test")
-				.appendCause("the sun is shining");
+				.appendCause("the sun is not shining");
 		Assert.assertEquals(
-				"[%s] Test verification failed because the sun is shining.",
+				"[%s] Test verification failed because the sun is not shining.",
 				messageInfo.getDefaultMessageTemplate());
 
 		String message = messageInfo.createMessage(null, null,
 				new Object[] { "1" });
 		Assert.assertEquals(
-				"[1] Test verification failed because the sun is shining.",
+				"[1] Test verification failed because the sun is not shining.",
 				message);
 
 		message = messageInfo.createMessage(Locale.GERMAN, "%.2f",

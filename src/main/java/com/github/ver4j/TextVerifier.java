@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 public class TextVerifier extends AObjectVerifierAwareVerifier {
 	private static final String FAILED_NOT_NULL_CAUSE = "it is an empty text";
 
-	private static final String FAILED_NOT_BLANK_CAUSE = "it does not contain non whitespace characters";
+	private static final String FAILED_NOT_BLANK_CAUSE = "it is an empty text or it contains only whitespace characters";
 
 	private final ExceptionFactory<?> notEmptyExceptionFactory;
 
