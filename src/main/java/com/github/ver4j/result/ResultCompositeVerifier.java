@@ -3,10 +3,10 @@ package com.github.ver4j.result;
 import com.github.ver4j.CompositeVerifier;
 import com.github.ver4j.ExceptionMessageInfo;
 import com.github.ver4j.ExceptionTypeInfo;
-import com.github.ver4j.result.exception.ClassCastResultException;
-import com.github.ver4j.result.exception.NullPointerResultException;
+import com.github.ver4j.result.exception.ResultTypeVerificationException;
+import com.github.ver4j.result.exception.NullPointerResultVerificationException;
 import com.github.ver4j.result.exception.ResultVerificationException;
-import com.github.ver4j.result.exception.TextResultException;
+import com.github.ver4j.result.exception.TextResultVerificationException;
 
 public class ResultCompositeVerifier extends CompositeVerifier {
 
@@ -14,9 +14,9 @@ public class ResultCompositeVerifier extends CompositeVerifier {
 		super(category, //
 				new ExceptionMessageInfo("result"), //
 				ExceptionTypeInfo.of(ResultVerificationException.class), //
-				ExceptionTypeInfo.of(ClassCastResultException.class), //
-				ExceptionTypeInfo.of(NullPointerResultException.class), //
-				ExceptionTypeInfo.of(TextResultException.class) //
+				ExceptionTypeInfo.of(ResultTypeVerificationException.class), //
+				ExceptionTypeInfo.of(NullPointerResultVerificationException.class), //
+				ExceptionTypeInfo.of(TextResultVerificationException.class) //
 		);
 	}
 

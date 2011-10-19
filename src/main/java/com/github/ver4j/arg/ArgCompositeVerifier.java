@@ -4,9 +4,9 @@ import com.github.ver4j.CompositeVerifier;
 import com.github.ver4j.ExceptionMessageInfo;
 import com.github.ver4j.ExceptionTypeInfo;
 import com.github.ver4j.arg.exception.ArgumentVerificationException;
-import com.github.ver4j.arg.exception.ClassCastArgumentException;
-import com.github.ver4j.arg.exception.NullPointerArgumentException;
-import com.github.ver4j.arg.exception.TextArgumentException;
+import com.github.ver4j.arg.exception.ArgumentTypeVerificationException;
+import com.github.ver4j.arg.exception.NullPointerArgumentVerificationException;
+import com.github.ver4j.arg.exception.TextArgumentVerificationException;
 
 public class ArgCompositeVerifier extends CompositeVerifier {
 
@@ -14,9 +14,9 @@ public class ArgCompositeVerifier extends CompositeVerifier {
 		super(category, //
 				new ExceptionMessageInfo("argument"), //
 				ExceptionTypeInfo.of(ArgumentVerificationException.class), //
-				ExceptionTypeInfo.of(ClassCastArgumentException.class), //
-				ExceptionTypeInfo.of(NullPointerArgumentException.class), //
-				ExceptionTypeInfo.of(TextArgumentException.class) //
+				ExceptionTypeInfo.of(ArgumentTypeVerificationException.class), //
+				ExceptionTypeInfo.of(NullPointerArgumentVerificationException.class), //
+				ExceptionTypeInfo.of(TextArgumentVerificationException.class) //
 		);
 	}
 

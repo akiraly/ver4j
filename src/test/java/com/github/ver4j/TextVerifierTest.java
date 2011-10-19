@@ -5,19 +5,19 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.github.ver4j.arg.exception.ArgumentVerificationException;
-import com.github.ver4j.arg.exception.ClassCastArgumentException;
-import com.github.ver4j.arg.exception.NullPointerArgumentException;
-import com.github.ver4j.arg.exception.TextArgumentException;
+import com.github.ver4j.arg.exception.ArgumentTypeVerificationException;
+import com.github.ver4j.arg.exception.NullPointerArgumentVerificationException;
+import com.github.ver4j.arg.exception.TextArgumentVerificationException;
 
 public class TextVerifierTest {
 	private final ObjectVerifier objectVerifier = new ObjectVerifier(null,
 			new ExceptionMessageInfo("Test"),
 			ExceptionTypeInfo.of(ArgumentVerificationException.class),
-			ExceptionTypeInfo.of(ClassCastArgumentException.class),
-			ExceptionTypeInfo.of(NullPointerArgumentException.class));
+			ExceptionTypeInfo.of(ArgumentTypeVerificationException.class),
+			ExceptionTypeInfo.of(NullPointerArgumentVerificationException.class));
 
 	private final TextVerifier verifier = new TextVerifier(objectVerifier,
-			ExceptionTypeInfo.of(TextArgumentException.class));
+			ExceptionTypeInfo.of(TextArgumentVerificationException.class));
 
 	// notEmpty*
 
@@ -38,22 +38,22 @@ public class TextVerifierTest {
 		verifier.notEmptyCm("", "", null);
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testNotEmptyWithFalse1() {
 		verifier.notEmpty("");
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testNotEmptyWithFalse2() {
 		verifier.notEmpty("", "");
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testNotEmptyWithFalse3() {
 		verifier.notEmpty("", "%s", "1");
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testNotEmptyCmWithFalse() {
 		verifier.notEmptyCm("", "", null);
 	}
@@ -77,22 +77,22 @@ public class TextVerifierTest {
 		verifier.notBlankCm(" ", "", null);
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testNotBlankWithFalse1() {
 		verifier.notBlank(" ");
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testNotBlankWithFalse2() {
 		verifier.notBlank(" ", "");
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testNotBlankWithFalse3() {
 		verifier.notBlank(" ", "%s", "1");
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testNotBlankCmWithFalse() {
 		verifier.notBlankCm(" ", "", null);
 	}
@@ -116,22 +116,22 @@ public class TextVerifierTest {
 		Assert.assertEquals(null, verifier.strippedNotNullCm(" ", "", null));
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testStrippedNotNullWithFalse1() {
 		verifier.strippedNotNull(" ");
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testStrippedNotNullWithFalse2() {
 		verifier.strippedNotNull(" ", "");
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testStrippedNotNullWithFalse3() {
 		verifier.strippedNotNull(" ", "%s", "1");
 	}
 
-	@Test(expected = TextArgumentException.class)
+	@Test(expected = TextArgumentVerificationException.class)
 	public void testStrippedNotNullCmWithFalse() {
 		verifier.strippedNotNullCm(" ", "", null);
 	}

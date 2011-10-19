@@ -5,15 +5,15 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.github.ver4j.arg.exception.ArgumentVerificationException;
-import com.github.ver4j.arg.exception.ClassCastArgumentException;
-import com.github.ver4j.arg.exception.NullPointerArgumentException;
+import com.github.ver4j.arg.exception.ArgumentTypeVerificationException;
+import com.github.ver4j.arg.exception.NullPointerArgumentVerificationException;
 
 public class ObjectVerifierTest {
 	private final ObjectVerifier verifier = new ObjectVerifier(null,
 			new ExceptionMessageInfo("Test"),
 			ExceptionTypeInfo.of(ArgumentVerificationException.class),
-			ExceptionTypeInfo.of(ClassCastArgumentException.class),
-			ExceptionTypeInfo.of(NullPointerArgumentException.class));
+			ExceptionTypeInfo.of(ArgumentTypeVerificationException.class),
+			ExceptionTypeInfo.of(NullPointerArgumentVerificationException.class));
 
 	// isTrue*
 
@@ -112,22 +112,22 @@ public class ObjectVerifierTest {
 		verifier.isAssignableFromCm(CharSequence.class, Integer.class, "", null);
 	}
 
-	@Test(expected = ClassCastArgumentException.class)
+	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsAssignableFromWithFalse1() {
 		verifier.isAssignableFrom(CharSequence.class, Integer.class);
 	}
 
-	@Test(expected = ClassCastArgumentException.class)
+	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsAssignableFromWithFalse2() {
 		verifier.isAssignableFrom(CharSequence.class, Integer.class, "");
 	}
 
-	@Test(expected = ClassCastArgumentException.class)
+	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsAssignableFromWithFalse3() {
 		verifier.isAssignableFrom(CharSequence.class, Integer.class, "%s", "1");
 	}
 
-	@Test(expected = ClassCastArgumentException.class)
+	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsAssignableFromCmWithFalse() {
 		verifier.isAssignableFromCm(CharSequence.class, Integer.class, "", null);
 	}
@@ -155,22 +155,22 @@ public class ObjectVerifierTest {
 				verifier.isInstanceOfCm(String.class, 1, "", null));
 	}
 
-	@Test(expected = ClassCastArgumentException.class)
+	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsInstanceOfWithFalse1() {
 		verifier.isInstanceOf(String.class, 1);
 	}
 
-	@Test(expected = ClassCastArgumentException.class)
+	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsInstanceOfWithFalse2() {
 		verifier.isInstanceOf(String.class, 1, "");
 	}
 
-	@Test(expected = ClassCastArgumentException.class)
+	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsInstanceOfWithFalse3() {
 		verifier.isInstanceOf(String.class, 1, "%s", "1");
 	}
 
-	@Test(expected = ClassCastArgumentException.class)
+	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsInstanceOfCmWithFalse() {
 		verifier.isInstanceOfCm(String.class, 1, "", null);
 	}
@@ -194,22 +194,22 @@ public class ObjectVerifierTest {
 		Assert.assertEquals(null, verifier.notNullCm(null, "", null));
 	}
 
-	@Test(expected = NullPointerArgumentException.class)
+	@Test(expected = NullPointerArgumentVerificationException.class)
 	public void testNotNullWithNull1() {
 		verifier.notNull(null);
 	}
 
-	@Test(expected = NullPointerArgumentException.class)
+	@Test(expected = NullPointerArgumentVerificationException.class)
 	public void testNotNullWithNull2() {
 		verifier.notNull(null, "");
 	}
 
-	@Test(expected = NullPointerArgumentException.class)
+	@Test(expected = NullPointerArgumentVerificationException.class)
 	public void testNotNullWithNull3() {
 		verifier.notNull(null, "%s", "1");
 	}
 
-	@Test(expected = NullPointerArgumentException.class)
+	@Test(expected = NullPointerArgumentVerificationException.class)
 	public void testNotNullCmWithNull() {
 		verifier.notNullCm(null, "", null);
 	}
