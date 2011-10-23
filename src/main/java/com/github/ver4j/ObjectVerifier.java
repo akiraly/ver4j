@@ -38,20 +38,19 @@ public class ObjectVerifier extends AVerifier {
 			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo) {
 		this.category = category;
 		this.defaultExceptionMessageInfo = defaultExceptionMessageInfo;
-		isTrueExceptionFactory = ExceptionFactory.of(category,
-				generalExceptionTypeInfo,
+		isTrueExceptionFactory = exceptionFactoryOf(generalExceptionTypeInfo,
 				defaultExceptionMessageInfo.appendCause(FAILED_IS_TRUE_CAUSE));
-		isFalseExceptionFactory = ExceptionFactory.of(category,
-				generalExceptionTypeInfo,
+		isFalseExceptionFactory = exceptionFactoryOf(generalExceptionTypeInfo,
 				defaultExceptionMessageInfo.appendCause(FAILED_IS_FALSE_CAUSE));
-		isAssignableFromExceptionFactory = ExceptionFactory.of(category,
-				classCastExceptionTypeInfo, defaultExceptionMessageInfo
+		isAssignableFromExceptionFactory = exceptionFactoryOf(
+				classCastExceptionTypeInfo,
+				defaultExceptionMessageInfo
 						.appendCause(FAILED_IS_ASSIGNABLE_FROM_CAUSE));
-		isInstanceOfExceptionFactory = ExceptionFactory.of(category,
-				classCastExceptionTypeInfo, defaultExceptionMessageInfo
+		isInstanceOfExceptionFactory = exceptionFactoryOf(
+				classCastExceptionTypeInfo,
+				defaultExceptionMessageInfo
 						.appendCause(FAILED_IS_INSTANCE_OF_CAUSE));
-		nullExceptionFactory = ExceptionFactory.of(category,
-				nullExceptionTypeInfo,
+		nullExceptionFactory = exceptionFactoryOf(nullExceptionTypeInfo,
 				defaultExceptionMessageInfo.appendCause(FAILED_NOT_NULL_CAUSE));
 	}
 

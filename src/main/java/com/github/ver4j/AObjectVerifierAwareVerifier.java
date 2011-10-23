@@ -15,6 +15,14 @@ public abstract class AObjectVerifierAwareVerifier extends AVerifier {
 		return objectVerifier;
 	}
 
+	@Nonnull
+	protected final <T extends GeneralVerificationException> ExceptionFactory<T> exceptionFactoryOf(
+			@Nonnull ExceptionTypeInfo<T> exceptionTypeInfo,
+			@Nonnull String cause) {
+		return exceptionFactoryOf(exceptionTypeInfo, objectVerifier
+				.getDefaultExceptionMessageInfo().appendCause(cause));
+	}
+
 	@Override
 	public final String getCategory() {
 		return objectVerifier.getCategory();

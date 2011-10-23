@@ -18,16 +18,10 @@ public class TextVerifier extends AObjectVerifierAwareVerifier {
 	public TextVerifier(@Nonnull ObjectVerifier objectVerifier,
 			@Nonnull ExceptionTypeInfo<?> textExceptionTypeInfo) {
 		super(objectVerifier);
-		notEmptyExceptionFactory = ExceptionFactory.of(
-				getCategory(),
-				textExceptionTypeInfo,
-				objectVerifier.getDefaultExceptionMessageInfo().appendCause(
-						FAILED_NOT_EMPTY_CAUSE));
-		notBlankExceptionFactory = ExceptionFactory.of(
-				getCategory(),
-				textExceptionTypeInfo,
-				objectVerifier.getDefaultExceptionMessageInfo().appendCause(
-						FAILED_NOT_BLANK_CAUSE));
+		notEmptyExceptionFactory = exceptionFactoryOf(textExceptionTypeInfo,
+				FAILED_NOT_EMPTY_CAUSE);
+		notBlankExceptionFactory = exceptionFactoryOf(textExceptionTypeInfo,
+				FAILED_NOT_BLANK_CAUSE);
 	}
 
 	public final void notEmpty(@Nonnull CharSequence text) {

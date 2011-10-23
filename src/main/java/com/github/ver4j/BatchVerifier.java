@@ -14,11 +14,8 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 	public BatchVerifier(@Nonnull ObjectVerifier objectVerifier,
 			@Nonnull ExceptionTypeInfo<?> batchExceptionTypeInfo) {
 		super(objectVerifier);
-		notEmptyExceptionFactory = ExceptionFactory.of(
-				getCategory(),
-				batchExceptionTypeInfo,
-				objectVerifier.getDefaultExceptionMessageInfo().appendCause(
-						FAILED_NOT_EMPTY_CAUSE));
+		notEmptyExceptionFactory = exceptionFactoryOf(batchExceptionTypeInfo,
+				FAILED_NOT_EMPTY_CAUSE);
 	}
 
 	public final void notEmpty(@Nonnull Object[] array) {
