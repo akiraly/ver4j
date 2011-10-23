@@ -41,12 +41,11 @@ public class ExceptionFactory<T extends GeneralVerificationException>
 	public final T newException(Object errorMessage, Object[] errorMessageArgs,
 			Map<?, ?> ctxtArgs) {
 		Object arg;
-		if (errorMessage != null && errorMessageArgs != null) {
+		if (errorMessage != null && errorMessageArgs != null)
 			arg = messageInfo.createMessage(null, errorMessage.toString(),
 					errorMessageArgs);
-		} else {
+		else
 			arg = errorMessage;
-		}
 
 		return createException(null, null, new Object[] { arg }, ctxtArgs);
 	}
@@ -70,12 +69,10 @@ public class ExceptionFactory<T extends GeneralVerificationException>
 		try {
 			T result = typeInfo.create(message, category);
 
-			if (ctxtArgs != null) {
-				for (Map.Entry<?, ?> entry : ctxtArgs.entrySet()) {
+			if (ctxtArgs != null)
+				for (Map.Entry<?, ?> entry : ctxtArgs.entrySet())
 					result.addContextValue(String.valueOf(entry.getKey()),
 							entry.getValue());
-				}
-			}
 
 			return result;
 		} catch (InstantiationException e) {

@@ -1,6 +1,5 @@
 package com.github.ver4j;
 
-
 public abstract class AVerifier implements IVerifier {
 	private boolean disabled = false;
 

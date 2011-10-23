@@ -56,42 +56,37 @@ public class ObjectVerifier extends AVerifier {
 	}
 
 	public final void isTrue(boolean expression) {
-		if (isDisabled() || expression) {
+		if (isDisabled() || expression)
 			return;
-		}
 		throw isTrueExceptionFactory.newException();
 	}
 
 	public final void isTrue(boolean expression, Object errorMessage,
 			Object... errorMessageArgs) {
-		if (isDisabled() || expression) {
+		if (isDisabled() || expression)
 			return;
-		}
 		throw isTrueExceptionFactory.newException(errorMessage,
 				errorMessageArgs);
 	}
 
 	public final void isTrueCm(boolean expression, String errorMessageTemplate,
 			Locale locale, Object... errorMessageArgs) {
-		if (isDisabled() || expression) {
+		if (isDisabled() || expression)
 			return;
-		}
 		throw isTrueExceptionFactory.newExceptionCm(errorMessageTemplate,
 				locale, errorMessageArgs);
 	}
 
 	public final void isFalse(boolean expression) {
-		if (isDisabled() || !expression) {
+		if (isDisabled() || !expression)
 			return;
-		}
 		throw isFalseExceptionFactory.newException();
 	}
 
 	public final void isFalse(boolean expression, Object errorMessage,
 			Object... errorMessageArgs) {
-		if (isDisabled() || !expression) {
+		if (isDisabled() || !expression)
 			return;
-		}
 		throw isFalseExceptionFactory.newException(errorMessage,
 				errorMessageArgs);
 	}
@@ -99,9 +94,8 @@ public class ObjectVerifier extends AVerifier {
 	public final void isFalseCm(boolean expression,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		if (isDisabled() || !expression) {
+		if (isDisabled() || !expression)
 			return;
-		}
 		throw isFalseExceptionFactory.newExceptionCm(errorMessageTemplate,
 				locale, errorMessageArgs);
 	}
@@ -110,9 +104,8 @@ public class ObjectVerifier extends AVerifier {
 			@Nonnull Class<?> type) {
 		notNull(superType);
 		notNull(type);
-		if (isDisabled() || superType.isAssignableFrom(type)) {
+		if (isDisabled() || superType.isAssignableFrom(type))
 			return;
-		}
 		throw isAssignableFromExceptionFactory
 				.newException(newAssignableFromContext(superType, type));
 	}
@@ -122,9 +115,8 @@ public class ObjectVerifier extends AVerifier {
 			Object... errorMessageArgs) {
 		notNull(superType, errorMessage, errorMessageArgs);
 		notNull(type, errorMessage, errorMessageArgs);
-		if (isDisabled() || superType.isAssignableFrom(type)) {
+		if (isDisabled() || superType.isAssignableFrom(type))
 			return;
-		}
 		throw isAssignableFromExceptionFactory.newException(errorMessage,
 				errorMessageArgs, newAssignableFromContext(superType, type));
 	}
@@ -134,9 +126,8 @@ public class ObjectVerifier extends AVerifier {
 			Object... errorMessageArgs) {
 		notNull(superType, errorMessageTemplate, locale, errorMessageArgs);
 		notNull(type, errorMessageTemplate, locale, errorMessageArgs);
-		if (isDisabled() || superType.isAssignableFrom(type)) {
+		if (isDisabled() || superType.isAssignableFrom(type))
 			return;
-		}
 		throw isAssignableFromExceptionFactory.newExceptionCm(
 				errorMessageTemplate, locale, errorMessageArgs,
 				newAssignableFromContext(superType, type));
@@ -155,9 +146,8 @@ public class ObjectVerifier extends AVerifier {
 	public final <T> T instanceOf(@Nonnull Object obj, @Nonnull Class<T> type) {
 		notNull(type);
 		notNull(obj);
-		if (isDisabled() || type.isInstance(obj)) {
+		if (isDisabled() || type.isInstance(obj))
 			return type.cast(obj);
-		}
 		throw isInstanceOfExceptionFactory.newException(newInstanceOfContext(
 				obj, type));
 	}
@@ -167,9 +157,8 @@ public class ObjectVerifier extends AVerifier {
 			Object errorMessage, Object... errorMessageArgs) {
 		notNull(type, errorMessage, errorMessageArgs);
 		notNull(obj, errorMessage, errorMessageArgs);
-		if (isDisabled() || type.isInstance(obj)) {
+		if (isDisabled() || type.isInstance(obj))
 			return type.cast(obj);
-		}
 		throw isInstanceOfExceptionFactory.newException(errorMessage,
 				errorMessageArgs, newInstanceOfContext(obj, type));
 	}
@@ -180,9 +169,8 @@ public class ObjectVerifier extends AVerifier {
 			Object... errorMessageArgs) {
 		notNullCm(type, errorMessageTemplate, locale, errorMessageArgs);
 		notNull(obj, errorMessageTemplate, locale, errorMessageArgs);
-		if (isDisabled() || type.isInstance(obj)) {
+		if (isDisabled() || type.isInstance(obj))
 			return type.cast(obj);
-		}
 		throw isInstanceOfExceptionFactory.newExceptionCm(errorMessageTemplate,
 				locale, errorMessageArgs, newInstanceOfContext(obj, type));
 	}
@@ -198,18 +186,16 @@ public class ObjectVerifier extends AVerifier {
 
 	@Nonnull
 	public final <T> T notNull(@Nonnull T object) {
-		if (isDisabled() || object != null) {
+		if (isDisabled() || object != null)
 			return object;
-		}
 		throw nullExceptionFactory.newException();
 	}
 
 	@Nonnull
 	public final <T> T notNull(@Nonnull T object, Object errorMessage,
 			Object... errorMessageArgs) {
-		if (isDisabled() || object != null) {
+		if (isDisabled() || object != null)
 			return object;
-		}
 		throw nullExceptionFactory.newException(errorMessage, errorMessageArgs);
 	}
 
@@ -217,9 +203,8 @@ public class ObjectVerifier extends AVerifier {
 	public final <T> T notNullCm(@Nonnull T object,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		if (isDisabled() || object != null) {
+		if (isDisabled() || object != null)
 			return object;
-		}
 		throw nullExceptionFactory.newExceptionCm(errorMessageTemplate, locale,
 				errorMessageArgs);
 	}

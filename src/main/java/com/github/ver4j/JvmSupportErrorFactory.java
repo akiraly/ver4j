@@ -23,8 +23,7 @@ public class JvmSupportErrorFactory {
 	}
 
 	@Nonnull
-	public final SupportError ofUtf8Encoding(
-			UnsupportedEncodingException cause) {
+	public final SupportError ofUtf8Encoding(UnsupportedEncodingException cause) {
 		return of(CharEncoding.UTF_8, cause);
 	}
 

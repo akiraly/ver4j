@@ -10,7 +10,7 @@ public class CompositeVerifier extends ObjectVerifier {
 	public final NumberVerifier number;
 
 	@Nonnull
-	public final CollectionAndArrayVerifier collection;
+	public final BatchVerifier batch;
 
 	@Nonnull
 	public final FileVerifier file;
@@ -20,10 +20,12 @@ public class CompositeVerifier extends ObjectVerifier {
 			@Nonnull ExceptionTypeInfo<?> generalExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> classCastExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo,
-			@Nonnull ExceptionTypeInfo<?> textExceptionTypeInfo) {
+			@Nonnull ExceptionTypeInfo<?> textExceptionTypeInfo,
+			@Nonnull ExceptionTypeInfo<?> batchExceptionTypeInfo) {
 		this(category, defaultExceptionMessageInfo, generalExceptionTypeInfo,
 				classCastExceptionTypeInfo, nullExceptionTypeInfo,
-				textExceptionTypeInfo, null, null, null, null);
+				textExceptionTypeInfo, batchExceptionTypeInfo, null, null,
+				null, null);
 	}
 
 	public CompositeVerifier(String category,
@@ -32,8 +34,9 @@ public class CompositeVerifier extends ObjectVerifier {
 			@Nonnull ExceptionTypeInfo<?> classCastExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> textExceptionTypeInfo,
-			TextVerifier text, NumberVerifier number,
-			CollectionAndArrayVerifier collection, FileVerifier file) {
+			@Nonnull ExceptionTypeInfo<?> batchExceptionTypeInfo,
+			TextVerifier text, NumberVerifier number, BatchVerifier batch,
+			FileVerifier file) {
 		super(category, defaultExceptionMessageInfo, generalExceptionTypeInfo,
 				classCastExceptionTypeInfo, nullExceptionTypeInfo);
 
@@ -42,8 +45,8 @@ public class CompositeVerifier extends ObjectVerifier {
 
 		this.number = number != null ? number : new NumberVerifier(this);
 
-		this.collection = collection != null ? collection
-				: new CollectionAndArrayVerifier(this);
+		this.batch = batch != null ? batch : new BatchVerifier(this,
+				batchExceptionTypeInfo);
 
 		this.file = file != null ? file : new FileVerifier(this);
 	}
@@ -53,7 +56,7 @@ public class CompositeVerifier extends ObjectVerifier {
 		super.setDisabled(disabled);
 		text.setDisabled(disabled);
 		number.setDisabled(disabled);
-		collection.setDisabled(disabled);
+		batch.setDisabled(disabled);
 		file.setDisabled(disabled);
 	}
 }

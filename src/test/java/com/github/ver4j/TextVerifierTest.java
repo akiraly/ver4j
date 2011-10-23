@@ -1,11 +1,9 @@
 package com.github.ver4j;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
-import com.github.ver4j.arg.exception.ArgumentVerificationException;
 import com.github.ver4j.arg.exception.ArgumentTypeVerificationException;
+import com.github.ver4j.arg.exception.ArgumentVerificationException;
 import com.github.ver4j.arg.exception.NullPointerArgumentVerificationException;
 import com.github.ver4j.arg.exception.TextArgumentVerificationException;
 
@@ -14,7 +12,8 @@ public class TextVerifierTest {
 			new ExceptionMessageInfo("Test"),
 			ExceptionTypeInfo.of(ArgumentVerificationException.class),
 			ExceptionTypeInfo.of(ArgumentTypeVerificationException.class),
-			ExceptionTypeInfo.of(NullPointerArgumentVerificationException.class));
+			ExceptionTypeInfo
+					.of(NullPointerArgumentVerificationException.class));
 
 	private final TextVerifier verifier = new TextVerifier(objectVerifier,
 			ExceptionTypeInfo.of(TextArgumentVerificationException.class));
@@ -95,44 +94,5 @@ public class TextVerifierTest {
 	@Test(expected = TextArgumentVerificationException.class)
 	public void testNotBlankCmWithFalse() {
 		verifier.notBlankCm(" ", "", null);
-	}
-
-	// strippedNotNull*
-
-	@Test
-	public void testStrippedNotNullWithTrue() {
-		Assert.assertEquals("a", verifier.strippedNotNull(" a "));
-		Assert.assertEquals("a", verifier.strippedNotNull(" a ", ""));
-		Assert.assertEquals("a", verifier.strippedNotNull(" a ", "%s", "1"));
-		Assert.assertEquals("a", verifier.strippedNotNullCm(" a ", "", null));
-	}
-
-	@Test
-	public void testStrippedNotNullWithFalseDisabled() {
-		verifier.setDisabled(true);
-		Assert.assertEquals(null, verifier.strippedNotNull(" "));
-		Assert.assertEquals(null, verifier.strippedNotNull(" ", ""));
-		Assert.assertEquals(null, verifier.strippedNotNull(" ", "%s", "1"));
-		Assert.assertEquals(null, verifier.strippedNotNullCm(" ", "", null));
-	}
-
-	@Test(expected = TextArgumentVerificationException.class)
-	public void testStrippedNotNullWithFalse1() {
-		verifier.strippedNotNull(" ");
-	}
-
-	@Test(expected = TextArgumentVerificationException.class)
-	public void testStrippedNotNullWithFalse2() {
-		verifier.strippedNotNull(" ", "");
-	}
-
-	@Test(expected = TextArgumentVerificationException.class)
-	public void testStrippedNotNullWithFalse3() {
-		verifier.strippedNotNull(" ", "%s", "1");
-	}
-
-	@Test(expected = TextArgumentVerificationException.class)
-	public void testStrippedNotNullCmWithFalse() {
-		verifier.strippedNotNullCm(" ", "", null);
 	}
 }

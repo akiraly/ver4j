@@ -31,9 +31,8 @@ public class GeneralVerifierRegistry {
 	public void setDisabled(boolean disabled) {
 		global.setDisabled(disabled);
 
-		for (GeneralVerifier verifier : verifiers.values()) {
+		for (GeneralVerifier verifier : verifiers.values())
 			verifier.setDisabled(disabled);
-		}
 	}
 
 }
