@@ -7,13 +7,16 @@ public class CompositeVerifier extends ObjectVerifier {
 	public final TextVerifier text;
 
 	@Nonnull
-	public final NumberVerifier number;
+	public final NumberVerifier<?> number;
 
 	@Nonnull
 	public final BatchVerifier batch;
 
 	@Nonnull
 	public final FileVerifier file;
+
+	@Nonnull
+	public final OrderVerifier<?> order;
 
 	public CompositeVerifier(String category,
 			@Nonnull ExceptionMessageInfo defaultExceptionMessageInfo,
@@ -25,7 +28,7 @@ public class CompositeVerifier extends ObjectVerifier {
 		this(category, defaultExceptionMessageInfo, generalExceptionTypeInfo,
 				classCastExceptionTypeInfo, nullExceptionTypeInfo,
 				textExceptionTypeInfo, batchExceptionTypeInfo, null, null,
-				null, null);
+				null, null, null);
 	}
 
 	public CompositeVerifier(String category,
@@ -35,20 +38,34 @@ public class CompositeVerifier extends ObjectVerifier {
 			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> textExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> batchExceptionTypeInfo,
-			TextVerifier text, NumberVerifier number, BatchVerifier batch,
-			FileVerifier file) {
+			TextVerifier text, NumberVerifier<?> number, BatchVerifier batch,
+			FileVerifier file, OrderVerifier<?> order) {
 		super(category, defaultExceptionMessageInfo, generalExceptionTypeInfo,
 				classCastExceptionTypeInfo, nullExceptionTypeInfo);
 
 		this.text = text != null ? text : new TextVerifier(this,
 				textExceptionTypeInfo);
 
-		this.number = number != null ? number : new NumberVerifier(this);
+		if (number != null)
+			this.number = number;
+		else {
+			@SuppressWarnings("rawtypes")
+			NumberVerifier verifier = new NumberVerifier(this);
+			this.number = verifier;
+		}
 
 		this.batch = batch != null ? batch : new BatchVerifier(this,
 				batchExceptionTypeInfo);
 
 		this.file = file != null ? file : new FileVerifier(this);
+
+		if (order != null)
+			this.order = order;
+		else {
+			@SuppressWarnings("rawtypes")
+			OrderVerifier verifier = new OrderVerifier(this);
+			this.order = verifier;
+		}
 	}
 
 	@Override
