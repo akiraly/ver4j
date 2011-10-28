@@ -1,5 +1,7 @@
 package com.github.ver4j;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 import com.github.ver4j.arg.exception.ArgumentTypeVerificationException;
@@ -15,26 +17,27 @@ public class TextVerifierTest {
 			ExceptionTypeInfo
 					.of(NullPointerArgumentVerificationException.class));
 
-	private final TextVerifier verifier = new TextVerifier(objectVerifier,
+	private final TextVerifier<CharSequence> verifier = new TextVerifier<CharSequence>(
+			objectVerifier,
 			ExceptionTypeInfo.of(TextArgumentVerificationException.class));
 
 	// notEmpty*
 
 	@Test
 	public void testNotEmptyWithTrue() {
-		verifier.notEmpty(" ");
-		verifier.notEmpty(" ", "");
-		verifier.notEmpty(" ", "%s", "1");
-		verifier.notEmptyCm(" ", "", null);
+		Assert.assertEquals(" ", verifier.notEmpty(" "));
+		Assert.assertEquals(" ", verifier.notEmpty(" ", ""));
+		Assert.assertEquals(" ", verifier.notEmpty(" ", "%s", "1"));
+		Assert.assertEquals(" ", verifier.notEmptyCm(" ", "", null));
 	}
 
 	@Test
 	public void testNotEmptyWithFalseDisabled() {
 		verifier.setDisabled(true);
-		verifier.notEmpty("");
-		verifier.notEmpty("", "");
-		verifier.notEmpty("", "%s", "1");
-		verifier.notEmptyCm("", "", null);
+		Assert.assertEquals("", verifier.notEmpty(""));
+		Assert.assertEquals("", verifier.notEmpty("", ""));
+		Assert.assertEquals("", verifier.notEmpty("", "%s", "1"));
+		Assert.assertEquals("", verifier.notEmptyCm("", "", null));
 	}
 
 	@Test(expected = TextArgumentVerificationException.class)
@@ -61,19 +64,19 @@ public class TextVerifierTest {
 
 	@Test
 	public void testNotBlankWithTrue() {
-		verifier.notBlank(" a ");
-		verifier.notBlank(" a ", "");
-		verifier.notBlank(" a ", "%s", "1");
-		verifier.notBlankCm(" a ", "", null);
+		Assert.assertEquals(" a ", verifier.notBlank(" a "));
+		Assert.assertEquals(" a ", verifier.notBlank(" a ", ""));
+		Assert.assertEquals(" a ", verifier.notBlank(" a ", "%s", "1"));
+		Assert.assertEquals(" a ", verifier.notBlankCm(" a ", "", null));
 	}
 
 	@Test
 	public void testNotBlankWithFalseDisabled() {
 		verifier.setDisabled(true);
-		verifier.notBlank(" ");
-		verifier.notBlank(" ", "");
-		verifier.notBlank(" ", "%s", "1");
-		verifier.notBlankCm(" ", "", null);
+		Assert.assertEquals(" ", verifier.notBlank(" "));
+		Assert.assertEquals(" ", verifier.notBlank(" ", ""));
+		Assert.assertEquals(" ", verifier.notBlank(" ", "%s", "1"));
+		Assert.assertEquals(" ", verifier.notBlankCm(" ", "", null));
 	}
 
 	@Test(expected = TextArgumentVerificationException.class)

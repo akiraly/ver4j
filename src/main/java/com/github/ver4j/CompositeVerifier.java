@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 public class CompositeVerifier extends ObjectVerifier {
 	@Nonnull
-	public final TextVerifier text;
+	public final TextVerifier<CharSequence> text;
 
 	@Nonnull
 	public final NumberVerifier<?> number;
@@ -38,12 +38,12 @@ public class CompositeVerifier extends ObjectVerifier {
 			@Nonnull ExceptionTypeInfo<?> nullExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> textExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> batchExceptionTypeInfo,
-			TextVerifier text, NumberVerifier<?> number, BatchVerifier batch,
-			FileVerifier file, OrderVerifier<?> order) {
+			TextVerifier<CharSequence> text, NumberVerifier<?> number,
+			BatchVerifier batch, FileVerifier file, OrderVerifier<?> order) {
 		super(category, defaultExceptionMessageInfo, generalExceptionTypeInfo,
 				classCastExceptionTypeInfo, nullExceptionTypeInfo);
 
-		this.text = text != null ? text : new TextVerifier(this,
+		this.text = text != null ? text : new TextVerifier<CharSequence>(this,
 				textExceptionTypeInfo);
 
 		if (number != null)

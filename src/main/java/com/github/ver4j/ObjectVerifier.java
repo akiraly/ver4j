@@ -99,34 +99,34 @@ public class ObjectVerifier extends AVerifier {
 				locale, errorMessageArgs);
 	}
 
-	public final void assignableFrom(@Nonnull Class<?> superType,
-			@Nonnull Class<?> type) {
+	public final <C> Class<C> assignableFrom(@Nonnull Class<?> superType,
+			@Nonnull Class<C> type) {
 		notNull(superType);
 		notNull(type);
 		if (isDisabled() || superType.isAssignableFrom(type))
-			return;
+			return type;
 		throw isAssignableFromExceptionFactory
 				.newException(newAssignableFromContext(superType, type));
 	}
 
-	public final void assignableFrom(@Nonnull Class<?> superType,
-			@Nonnull Class<?> type, Object errorMessage,
+	public final <C> Class<C> assignableFrom(@Nonnull Class<?> superType,
+			@Nonnull Class<C> type, Object errorMessage,
 			Object... errorMessageArgs) {
 		notNull(superType, errorMessage, errorMessageArgs);
 		notNull(type, errorMessage, errorMessageArgs);
 		if (isDisabled() || superType.isAssignableFrom(type))
-			return;
+			return type;
 		throw isAssignableFromExceptionFactory.newException(errorMessage,
 				errorMessageArgs, newAssignableFromContext(superType, type));
 	}
 
-	public final void assignableFromCm(@Nonnull Class<?> superType,
-			@Nonnull Class<?> type, String errorMessageTemplate, Locale locale,
+	public final <C> Class<C> assignableFromCm(@Nonnull Class<?> superType,
+			@Nonnull Class<C> type, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
 		notNull(superType, errorMessageTemplate, locale, errorMessageArgs);
 		notNull(type, errorMessageTemplate, locale, errorMessageArgs);
 		if (isDisabled() || superType.isAssignableFrom(type))
-			return;
+			return type;
 		throw isAssignableFromExceptionFactory.newExceptionCm(
 				errorMessageTemplate, locale, errorMessageArgs,
 				newAssignableFromContext(superType, type));

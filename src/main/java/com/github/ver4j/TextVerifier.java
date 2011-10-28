@@ -6,7 +6,8 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class TextVerifier extends AObjectVerifierAwareVerifier {
+public class TextVerifier<S extends CharSequence> extends
+		AObjectVerifierAwareVerifier {
 	private static final String FAILED_NOT_EMPTY_CAUSE = "it is an empty text";
 
 	private static final String FAILED_NOT_BLANK_CAUSE = "it is an empty text or it contains only whitespace characters";
@@ -24,51 +25,51 @@ public class TextVerifier extends AObjectVerifierAwareVerifier {
 				FAILED_NOT_BLANK_CAUSE);
 	}
 
-	public final void notEmpty(@Nonnull CharSequence text) {
+	public final <T extends S> T notEmpty(@Nonnull T text) {
 		object().notNull(text);
 		if (isDisabled() || text.length() > 0)
-			return;
+			return text;
 		throw notEmptyExceptionFactory.newException();
 	}
 
-	public final void notEmpty(@Nonnull CharSequence text, Object errorMessage,
+	public final <T extends S> T notEmpty(@Nonnull T text, Object errorMessage,
 			Object... errorMessageArgs) {
 		object().notNull(text, errorMessage, errorMessageArgs);
 		if (isDisabled() || text.length() > 0)
-			return;
+			return text;
 		throw notEmptyExceptionFactory.newException(errorMessage,
 				errorMessageArgs);
 	}
 
-	public final void notEmptyCm(@Nonnull CharSequence text,
+	public final <T extends S> T notEmptyCm(@Nonnull T text,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
 		object().notNullCm(text, errorMessageTemplate, locale, errorMessageArgs);
 		if (isDisabled() || text.length() > 0)
-			return;
+			return text;
 		throw notEmptyExceptionFactory.newExceptionCm(errorMessageTemplate,
 				locale, errorMessageArgs);
 	}
 
-	public final void notBlank(@Nonnull CharSequence text) {
+	public final <T extends S> T notBlank(@Nonnull T text) {
 		if (isDisabled() || !StringUtils.isBlank(text))
-			return;
+			return text;
 		throw notBlankExceptionFactory.newException();
 	}
 
-	public final void notBlank(@Nonnull CharSequence text, Object errorMessage,
+	public final <T extends S> T notBlank(@Nonnull T text, Object errorMessage,
 			Object... errorMessageArgs) {
 		if (isDisabled() || !StringUtils.isBlank(text))
-			return;
+			return text;
 		throw notBlankExceptionFactory.newException(errorMessage,
 				errorMessageArgs);
 	}
 
-	public final void notBlankCm(@Nonnull CharSequence text,
+	public final <T extends S> T notBlankCm(@Nonnull T text,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
 		if (isDisabled() || !StringUtils.isBlank(text))
-			return;
+			return text;
 		throw notBlankExceptionFactory.newExceptionCm(errorMessageTemplate,
 				locale, errorMessageArgs);
 	}

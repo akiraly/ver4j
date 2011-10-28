@@ -98,19 +98,27 @@ public class ObjectVerifierTest {
 
 	@Test
 	public void testIsAssignableFromWithTrue() {
-		verifier.assignableFrom(CharSequence.class, String.class);
-		verifier.assignableFrom(CharSequence.class, String.class, "");
-		verifier.assignableFrom(CharSequence.class, String.class, "%s", "1");
-		verifier.assignableFromCm(CharSequence.class, String.class, "", null);
+		Assert.assertEquals(String.class,
+				verifier.assignableFrom(CharSequence.class, String.class));
+		Assert.assertEquals(String.class,
+				verifier.assignableFrom(CharSequence.class, String.class, ""));
+		Assert.assertEquals(String.class, verifier.assignableFrom(
+				CharSequence.class, String.class, "%s", "1"));
+		Assert.assertEquals(String.class, verifier.assignableFromCm(
+				CharSequence.class, String.class, "", null));
 	}
 
 	@Test
 	public void testIsAssignableFromWithFalseDisabled() {
 		verifier.setDisabled(true);
-		verifier.assignableFrom(CharSequence.class, Integer.class);
-		verifier.assignableFrom(CharSequence.class, Integer.class, "");
-		verifier.assignableFrom(CharSequence.class, Integer.class, "%s", "1");
-		verifier.assignableFromCm(CharSequence.class, Integer.class, "", null);
+		Assert.assertEquals(Integer.class,
+				verifier.assignableFrom(CharSequence.class, Integer.class));
+		Assert.assertEquals(Integer.class,
+				verifier.assignableFrom(CharSequence.class, Integer.class, ""));
+		Assert.assertEquals(Integer.class, verifier.assignableFrom(
+				CharSequence.class, Integer.class, "%s", "1"));
+		Assert.assertEquals(Integer.class, verifier.assignableFromCm(
+				CharSequence.class, Integer.class, "", null));
 	}
 
 	@Test(expected = ArgumentTypeVerificationException.class)
