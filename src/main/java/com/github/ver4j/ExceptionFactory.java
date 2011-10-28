@@ -27,19 +27,20 @@ public class ExceptionFactory<T extends GeneralVerificationException>
 	}
 
 	public final T newException() {
-		return newException(null);
+		return newException(null, (Throwable) null);
 	}
 
-	public final T newException(Map<?, ?> ctxtArgs) {
-		return createException(null, null, new Object[] { null }, ctxtArgs);
+	public final T newException(Map<?, ?> ctxtArgs, Throwable cause) {
+		return createException(null, null, new Object[] { null }, ctxtArgs,
+				cause);
 	}
 
 	public final T newException(Object errorMessage, Object[] errorMessageArgs) {
-		return newException(errorMessage, errorMessageArgs, null);
+		return newException(errorMessage, errorMessageArgs, null, null);
 	}
 
 	public final T newException(Object errorMessage, Object[] errorMessageArgs,
-			Map<?, ?> ctxtArgs) {
+			Map<?, ?> ctxtArgs, Throwable cause) {
 		Object arg;
 		if (errorMessage != null && errorMessageArgs != null)
 			arg = messageInfo.createMessage(null, errorMessage.toString(),
@@ -47,27 +48,28 @@ public class ExceptionFactory<T extends GeneralVerificationException>
 		else
 			arg = errorMessage;
 
-		return createException(null, null, new Object[] { arg }, ctxtArgs);
+		return createException(null, null, new Object[] { arg }, ctxtArgs,
+				cause);
 	}
 
 	public final T newExceptionCm(String errorMessageTemplate, Locale locale,
 			Object[] errorMessageArgs) {
 		return newExceptionCm(errorMessageTemplate, locale, errorMessageArgs,
-				null);
+				null, null);
 	}
 
 	public final T newExceptionCm(String errorMessageTemplate, Locale locale,
-			Object[] errorMessageArgs, Map<?, ?> ctxtArgs) {
+			Object[] errorMessageArgs, Map<?, ?> ctxtArgs, Throwable cause) {
 		return createException(locale, errorMessageTemplate, errorMessageArgs,
-				ctxtArgs);
+				ctxtArgs, cause);
 	}
 
 	protected T createException(Locale locale, String messageTemplate,
-			Object[] messageTemplateArgs, Map<?, ?> ctxtArgs) {
+			Object[] messageTemplateArgs, Map<?, ?> ctxtArgs, Throwable cause) {
 		String message = messageInfo.createMessage(locale, messageTemplate,
 				messageTemplateArgs);
 		try {
-			T result = typeInfo.create(message, category);
+			T result = typeInfo.create(message, category, cause);
 
 			if (ctxtArgs != null)
 				for (Map.Entry<?, ?> entry : ctxtArgs.entrySet())

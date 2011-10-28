@@ -40,6 +40,12 @@ public class BatchVerifierTest {
 		Assert.assertSame(list, verifier.notEmpty(list, "%s", "1"));
 		Assert.assertSame(list, verifier.notEmptyCm(list, "", null));
 
+		Iterable<String> iterable = list;
+		Assert.assertSame(iterable, verifier.notEmpty(iterable));
+		Assert.assertSame(iterable, verifier.notEmpty(iterable, ""));
+		Assert.assertSame(iterable, verifier.notEmpty(iterable, "%s", "1"));
+		Assert.assertSame(iterable, verifier.notEmptyCm(iterable, "", null));
+
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("", "");
 		Assert.assertSame(map, verifier.notEmpty(map));
@@ -63,6 +69,12 @@ public class BatchVerifierTest {
 		Assert.assertSame(list, verifier.notEmpty(list, ""));
 		Assert.assertSame(list, verifier.notEmpty(list, "%s", "1"));
 		Assert.assertSame(list, verifier.notEmptyCm(list, "", null));
+
+		Iterable<Object> iterable = list;
+		Assert.assertSame(iterable, verifier.notEmpty(iterable));
+		Assert.assertSame(iterable, verifier.notEmpty(iterable, ""));
+		Assert.assertSame(iterable, verifier.notEmpty(iterable, "%s", "1"));
+		Assert.assertSame(iterable, verifier.notEmptyCm(iterable, "", null));
 
 		Map<String, String> map = new HashMap<String, String>();
 		Assert.assertSame(map, verifier.notEmpty(map));
@@ -109,6 +121,26 @@ public class BatchVerifierTest {
 	@Test(expected = BatchArgumentVerificationException.class)
 	public void testNotEmptyCmCollectionWithFalse() {
 		verifier.notEmptyCm(Arrays.asList(), "", null);
+	}
+
+	@Test(expected = BatchArgumentVerificationException.class)
+	public void testNotEmptyIterableWithFalse1() {
+		verifier.notEmpty((Iterable<?>) Arrays.asList());
+	}
+
+	@Test(expected = BatchArgumentVerificationException.class)
+	public void testNotEmptyIterableWithFalse2() {
+		verifier.notEmpty((Iterable<?>) Arrays.asList(), "");
+	}
+
+	@Test(expected = BatchArgumentVerificationException.class)
+	public void testNotEmptyIterableWithFalse3() {
+		verifier.notEmpty((Iterable<?>) Arrays.asList(), "%s", "1");
+	}
+
+	@Test(expected = BatchArgumentVerificationException.class)
+	public void testNotEmptyCmIterableWithFalse() {
+		verifier.notEmptyCm((Iterable<?>) Arrays.asList(), "", null);
 	}
 
 	@Test(expected = BatchArgumentVerificationException.class)

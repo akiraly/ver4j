@@ -11,6 +11,8 @@ public class ExceptionTypeInfo<T extends GeneralVerificationException> {
 
 	private final Constructor<T> exceptionConstructor;
 
+	private final Constructor<T> exceptionConstructorWithCause;
+
 	public ExceptionTypeInfo(Class<T> exceptionType) {
 		super();
 		this.type = exceptionType;
@@ -18,6 +20,9 @@ public class ExceptionTypeInfo<T extends GeneralVerificationException> {
 		try {
 			this.exceptionConstructor = exceptionType.getConstructor(
 					String.class, String.class);
+
+			this.exceptionConstructorWithCause = exceptionType.getConstructor(
+					String.class, String.class, Throwable.class);
 		} catch (NoSuchMethodException e) {
 			throw new IllegalStateException(
 					"No constructor with correct signature found for exception type: "
@@ -30,10 +35,16 @@ public class ExceptionTypeInfo<T extends GeneralVerificationException> {
 		return new ExceptionTypeInfo<T>(exceptionType);
 	}
 
-	public T create(String message, String category)
+	public T create(String message, String category, Throwable cause)
 			throws InstantiationException, IllegalAccessException,
 			InvocationTargetException {
-		return exceptionConstructor.newInstance(message, category);
+		T instance;
+		if (cause == null)
+			instance = exceptionConstructor.newInstance(message, category);
+		else
+			instance = exceptionConstructorWithCause.newInstance(message,
+					category, cause);
+		return instance;
 	}
 
 	public final Class<T> getType() {

@@ -1,5 +1,7 @@
 package com.github.ver4j;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
 
 public class GeneralVerificationException extends ContextedRuntimeException
@@ -10,6 +12,14 @@ public class GeneralVerificationException extends ContextedRuntimeException
 
 	public GeneralVerificationException(String message, String category) {
 		super(message);
+		this.category = category;
+		if (category != null)
+			addContextValue("verification-category", category);
+	}
+
+	public GeneralVerificationException(String message, String category,
+			@Nonnull Throwable cause) {
+		super(message, cause);
 		this.category = category;
 		if (category != null)
 			addContextValue("verification-category", category);

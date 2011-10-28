@@ -8,9 +8,9 @@ import org.apache.commons.lang3.StringUtils;
 
 public class TextVerifier<S extends CharSequence> extends
 		AObjectVerifierAwareVerifier {
-	private static final String FAILED_NOT_EMPTY_CAUSE = "it is an empty text";
+	private static final String FAILED_NOT_EMPTY_CAUSE = "the text is null or empty";
 
-	private static final String FAILED_NOT_BLANK_CAUSE = "it is an empty text or it contains only whitespace characters";
+	private static final String FAILED_NOT_BLANK_CAUSE = "the text is null or empty or it contains only whitespace characters";
 
 	private final ExceptionFactory<?> notEmptyExceptionFactory;
 

@@ -7,15 +7,15 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 public class ObjectVerifier extends AVerifier {
-	private static final String FAILED_IS_TRUE_CAUSE = "it is false";
+	private static final String FAILED_IS_TRUE_CAUSE = "the expression is false";
 
-	private static final String FAILED_IS_FALSE_CAUSE = "it is true";
+	private static final String FAILED_IS_FALSE_CAUSE = "the expression is true";
 
-	private static final String FAILED_IS_ASSIGNABLE_FROM_CAUSE = "the tested class can not be casted to the reference class";
+	private static final String FAILED_IS_ASSIGNABLE_FROM_CAUSE = "the class can not be casted to the reference class";
 
-	private static final String FAILED_IS_INSTANCE_OF_CAUSE = "the tested object is not an instance of the reference class";
+	private static final String FAILED_IS_INSTANCE_OF_CAUSE = "the object is not an instance of the reference class";
 
-	private static final String FAILED_NOT_NULL_CAUSE = "it is null";
+	private static final String FAILED_NOT_NULL_CAUSE = "the object is null";
 
 	private final String category;
 
@@ -106,8 +106,8 @@ public class ObjectVerifier extends AVerifier {
 		notNull(type);
 		if (isDisabled() || superType.isAssignableFrom(type))
 			return type;
-		throw isAssignableFromExceptionFactory
-				.newException(newAssignableFromContext(superType, type));
+		throw isAssignableFromExceptionFactory.newException(
+				newAssignableFromContext(superType, type), (Throwable) null);
 	}
 
 	@Nonnull
@@ -119,7 +119,8 @@ public class ObjectVerifier extends AVerifier {
 		if (isDisabled() || superType.isAssignableFrom(type))
 			return type;
 		throw isAssignableFromExceptionFactory.newException(errorMessage,
-				errorMessageArgs, newAssignableFromContext(superType, type));
+				errorMessageArgs, newAssignableFromContext(superType, type),
+				null);
 	}
 
 	@Nonnull
@@ -132,7 +133,7 @@ public class ObjectVerifier extends AVerifier {
 			return type;
 		throw isAssignableFromExceptionFactory.newExceptionCm(
 				errorMessageTemplate, locale, errorMessageArgs,
-				newAssignableFromContext(superType, type));
+				newAssignableFromContext(superType, type), null);
 	}
 
 	@Nonnull
@@ -150,8 +151,8 @@ public class ObjectVerifier extends AVerifier {
 		notNull(obj);
 		if (isDisabled() || type.isInstance(obj))
 			return type.cast(obj);
-		throw isInstanceOfExceptionFactory.newException(newInstanceOfContext(
-				obj, type));
+		throw isInstanceOfExceptionFactory.newException(
+				newInstanceOfContext(obj, type), (Throwable) null);
 	}
 
 	@Nonnull
@@ -162,7 +163,7 @@ public class ObjectVerifier extends AVerifier {
 		if (isDisabled() || type.isInstance(obj))
 			return type.cast(obj);
 		throw isInstanceOfExceptionFactory.newException(errorMessage,
-				errorMessageArgs, newInstanceOfContext(obj, type));
+				errorMessageArgs, newInstanceOfContext(obj, type), null);
 	}
 
 	@Nonnull
@@ -173,15 +174,16 @@ public class ObjectVerifier extends AVerifier {
 		notNull(obj, errorMessageTemplate, locale, errorMessageArgs);
 		if (isDisabled() || type.isInstance(obj))
 			return type.cast(obj);
-		throw isInstanceOfExceptionFactory.newExceptionCm(errorMessageTemplate,
-				locale, errorMessageArgs, newInstanceOfContext(obj, type));
+		throw isInstanceOfExceptionFactory
+				.newExceptionCm(errorMessageTemplate, locale, errorMessageArgs,
+						newInstanceOfContext(obj, type), null);
 	}
 
 	@Nonnull
 	private final Map<Object, Object> newInstanceOfContext(@Nonnull Object obj,
 			@Nonnull Class<?> type) {
 		Map<Object, Object> context = newContextMap();
-		context.put("tested class", obj);
+		context.put("tested object", obj);
 		context.put("reference class", type);
 		return context;
 	}
