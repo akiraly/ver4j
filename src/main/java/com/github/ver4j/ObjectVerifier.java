@@ -99,6 +99,7 @@ public class ObjectVerifier extends AVerifier {
 				locale, errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <C> Class<C> assignableFrom(@Nonnull Class<?> superType,
 			@Nonnull Class<C> type) {
 		notNull(superType);
@@ -109,6 +110,7 @@ public class ObjectVerifier extends AVerifier {
 				.newException(newAssignableFromContext(superType, type));
 	}
 
+	@Nonnull
 	public final <C> Class<C> assignableFrom(@Nonnull Class<?> superType,
 			@Nonnull Class<C> type, Object errorMessage,
 			Object... errorMessageArgs) {
@@ -120,6 +122,7 @@ public class ObjectVerifier extends AVerifier {
 				errorMessageArgs, newAssignableFromContext(superType, type));
 	}
 
+	@Nonnull
 	public final <C> Class<C> assignableFromCm(@Nonnull Class<?> superType,
 			@Nonnull Class<C> type, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {

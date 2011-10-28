@@ -42,6 +42,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				FAILED_NO_NULL_KEYS_VALUES_CAUSE);
 	}
 
+	@Nonnull
 	public final <T> T[] notEmpty(@Nonnull T[] array) {
 		object().notNull(array);
 		if (isDisabled() || array.length > 0)
@@ -49,6 +50,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		throw notEmptyExceptionFactory.newException();
 	}
 
+	@Nonnull
 	public final <T> T[] notEmpty(@Nonnull T[] array, Object errorMessage,
 			Object... errorMessageArgs) {
 		object().notNull(array, errorMessage, errorMessageArgs);
@@ -58,6 +60,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <T> T[] notEmptyCm(@Nonnull T[] array,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
@@ -69,6 +72,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				locale, errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <T, C extends Collection<T>> C notEmpty(@Nonnull C collection) {
 		object().notNull(collection);
 		if (isDisabled() || !collection.isEmpty())
@@ -76,6 +80,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		throw notEmptyExceptionFactory.newException();
 	}
 
+	@Nonnull
 	public final <T, C extends Collection<T>> C notEmpty(@Nonnull C collection,
 			Object errorMessage, Object... errorMessageArgs) {
 		object().notNull(collection, errorMessage, errorMessageArgs);
@@ -85,6 +90,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <T, C extends Collection<T>> C notEmptyCm(
 			@Nonnull C collection, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
@@ -96,6 +102,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				locale, errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M notEmpty(@Nonnull M map) {
 		object().notNull(map);
 		if (isDisabled() || map.size() > 0)
@@ -103,6 +110,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		throw notEmptyExceptionFactory.newException();
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M notEmpty(@Nonnull M map,
 			Object errorMessage, Object... errorMessageArgs) {
 		object().notNull(map, errorMessage, errorMessageArgs);
@@ -112,6 +120,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M notEmptyCm(@Nonnull M map,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
@@ -122,6 +131,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				locale, errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M noNullKeys(@Nonnull M map) {
 		object().notNull(map);
 		if (isDisabled() || !hasNull(map.keySet()))
@@ -129,6 +139,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		throw noNullKeysFactory.newException();
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M noNullKeys(@Nonnull M map,
 			Object errorMessage, Object... errorMessageArgs) {
 		object().notNull(map, errorMessage, errorMessageArgs);
@@ -137,6 +148,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		throw noNullKeysFactory.newException(errorMessage, errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M noNullKeysCm(@Nonnull M map,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
@@ -147,6 +159,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M noNullValues(@Nonnull M map) {
 		object().notNull(map);
 		if (isDisabled() || !hasNull(map.values()))
@@ -154,6 +167,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		throw noNullValuesFactory.newException();
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M noNullValues(@Nonnull M map,
 			Object errorMessage, Object... errorMessageArgs) {
 		object().notNull(map, errorMessage, errorMessageArgs);
@@ -162,6 +176,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		throw noNullValuesFactory.newException(errorMessage, errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M noNullValuesCm(@Nonnull M map,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
@@ -172,6 +187,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M noNullKeysValues(@Nonnull M map) {
 		object().notNull(map);
 		if (isDisabled() || !hasNullKeyOrValue(map.entrySet()))
@@ -179,6 +195,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		throw noNullKeysValuesFactory.newException();
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M noNullKeysValues(@Nonnull M map,
 			Object errorMessage, Object... errorMessageArgs) {
 		object().notNull(map, errorMessage, errorMessageArgs);
@@ -188,6 +205,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <K, V, M extends Map<K, V>> M noNullKeysValuesCm(
 			@Nonnull M map, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
@@ -205,6 +223,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		return false;
 	}
 
+	@Nonnull
 	public final <T, I extends Iterable<T>> I noNullElements(@Nonnull I iterable) {
 		object().notNull(iterable);
 		if (isDisabled() || !hasNull(iterable))
@@ -212,6 +231,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		throw noNullElementsFactory.newException();
 	}
 
+	@Nonnull
 	public final <T, I extends Iterable<T>> I noNullElements(
 			@Nonnull I iterable, Object errorMessage,
 			Object... errorMessageArgs) {
@@ -222,6 +242,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				.newException(errorMessage, errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <T, I extends Iterable<T>> I noNullElementsCm(
 			@Nonnull I iterable, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
@@ -240,6 +261,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		return false;
 	}
 
+	@Nonnull
 	public final <T> T[] noNullElements(@Nonnull T[] array) {
 		object().notNull(array);
 		if (isDisabled() || !hasNull(array))
@@ -247,6 +269,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 		throw noNullElementsFactory.newException();
 	}
 
+	@Nonnull
 	public final <T> T[] noNullElements(@Nonnull T[] array,
 			Object errorMessage, Object... errorMessageArgs) {
 		object().notNull(array, errorMessage, errorMessageArgs);
@@ -256,6 +279,7 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				.newException(errorMessage, errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <T> T[] noNullElementsCm(@Nonnull T[] array,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {

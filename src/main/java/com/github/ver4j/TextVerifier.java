@@ -25,6 +25,7 @@ public class TextVerifier<S extends CharSequence> extends
 				FAILED_NOT_BLANK_CAUSE);
 	}
 
+	@Nonnull
 	public final <T extends S> T notEmpty(@Nonnull T text) {
 		object().notNull(text);
 		if (isDisabled() || text.length() > 0)
@@ -32,6 +33,7 @@ public class TextVerifier<S extends CharSequence> extends
 		throw notEmptyExceptionFactory.newException();
 	}
 
+	@Nonnull
 	public final <T extends S> T notEmpty(@Nonnull T text, Object errorMessage,
 			Object... errorMessageArgs) {
 		object().notNull(text, errorMessage, errorMessageArgs);
@@ -41,6 +43,7 @@ public class TextVerifier<S extends CharSequence> extends
 				errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <T extends S> T notEmptyCm(@Nonnull T text,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
@@ -51,12 +54,14 @@ public class TextVerifier<S extends CharSequence> extends
 				locale, errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <T extends S> T notBlank(@Nonnull T text) {
 		if (isDisabled() || !StringUtils.isBlank(text))
 			return text;
 		throw notBlankExceptionFactory.newException();
 	}
 
+	@Nonnull
 	public final <T extends S> T notBlank(@Nonnull T text, Object errorMessage,
 			Object... errorMessageArgs) {
 		if (isDisabled() || !StringUtils.isBlank(text))
@@ -65,6 +70,7 @@ public class TextVerifier<S extends CharSequence> extends
 				errorMessageArgs);
 	}
 
+	@Nonnull
 	public final <T extends S> T notBlankCm(@Nonnull T text,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
