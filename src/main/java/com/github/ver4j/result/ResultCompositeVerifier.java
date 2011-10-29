@@ -19,8 +19,7 @@ public class ResultCompositeVerifier extends CompositeVerifier {
 				ExceptionTypeInfo
 						.of(NullPointerResultVerificationException.class), //
 				ExceptionTypeInfo.of(TextResultVerificationException.class), //
-				ExceptionTypeInfo
-						.of(BatchResultVerificationException.class) //
+				ExceptionTypeInfo.of(BatchResultVerificationException.class) //
 		);
 	}
 

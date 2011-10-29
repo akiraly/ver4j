@@ -19,8 +19,7 @@ public class ArgCompositeVerifier extends CompositeVerifier {
 				ExceptionTypeInfo
 						.of(NullPointerArgumentVerificationException.class), //
 				ExceptionTypeInfo.of(TextArgumentVerificationException.class), //
-				ExceptionTypeInfo
-						.of(BatchArgumentVerificationException.class) //
+				ExceptionTypeInfo.of(BatchArgumentVerificationException.class) //
 		);
 	}
 

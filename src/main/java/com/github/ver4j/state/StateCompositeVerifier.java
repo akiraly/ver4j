@@ -19,8 +19,7 @@ public class StateCompositeVerifier extends CompositeVerifier {
 				ExceptionTypeInfo
 						.of(NullPointerStateVerificationException.class), //
 				ExceptionTypeInfo.of(TextStateVerificationException.class), //
-				ExceptionTypeInfo
-						.of(BatchStateVerificationException.class) //
+				ExceptionTypeInfo.of(BatchStateVerificationException.class) //
 		);
 	}
 }
