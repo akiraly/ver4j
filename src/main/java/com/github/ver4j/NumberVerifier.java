@@ -3,14 +3,11 @@ package com.github.ver4j;
 import javax.annotation.Nonnull;
 
 public class NumberVerifier<N extends Number & Comparable<N>> extends
-		OrderVerifier<N> {
+		AOrderVerifierAwareVerifier<N> {
 
-	public NumberVerifier(@Nonnull ObjectVerifier objectVerifier) {
-		super(objectVerifier);
-	}
-
-	public void valueEquals() {
-
+	public NumberVerifier(@Nonnull ObjectVerifier objectVerifier,
+			@Nonnull OrderVerifier<N> orderVerifier) {
+		super(objectVerifier, orderVerifier);
 	}
 
 	/*

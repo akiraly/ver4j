@@ -5,6 +5,7 @@ import com.github.ver4j.ExceptionMessageInfo;
 import com.github.ver4j.ExceptionTypeInfo;
 import com.github.ver4j.state.exception.BatchStateVerificationException;
 import com.github.ver4j.state.exception.NullPointerStateVerificationException;
+import com.github.ver4j.state.exception.StateOrderVerificationException;
 import com.github.ver4j.state.exception.StateTypeVerificationException;
 import com.github.ver4j.state.exception.StateVerificationException;
 import com.github.ver4j.state.exception.TextStateVerificationException;
@@ -19,7 +20,8 @@ public class StateCompositeVerifier extends CompositeVerifier {
 				ExceptionTypeInfo
 						.of(NullPointerStateVerificationException.class), //
 				ExceptionTypeInfo.of(TextStateVerificationException.class), //
-				ExceptionTypeInfo.of(BatchStateVerificationException.class) //
+				ExceptionTypeInfo.of(BatchStateVerificationException.class), //
+				ExceptionTypeInfo.of(StateOrderVerificationException.class) //
 		);
 	}
 }
