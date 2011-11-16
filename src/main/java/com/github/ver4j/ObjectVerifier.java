@@ -31,6 +31,30 @@ public class ObjectVerifier extends AVerifier {
 
 	private final ExceptionFactory<?> nullExceptionFactory;
 
+	public class Internal {
+		public final boolean isTrue(final boolean expression, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs) {
+			if (isDisabled())
+				return expression;
+
+			return new AVerifierTask<Boolean>() {
+				@Override
+				protected Boolean result() {
+					return expression;
+				}
+
+				@Override
+				protected boolean isValid() {
+					return expression;
+				}
+			}.verify(isTrueExceptionFactory, locale, errorMessageTemplate,
+					errorMessage, errorMessageArgs);
+		}
+	}
+
+	private final Internal internal;
+
 	public ObjectVerifier(String category,
 			@Nonnull ExceptionMessageInfo defaultExceptionMessageInfo,
 			@Nonnull ExceptionTypeInfo<?> generalExceptionTypeInfo,
@@ -52,28 +76,29 @@ public class ObjectVerifier extends AVerifier {
 						.appendCause(FAILED_IS_INSTANCE_OF_CAUSE));
 		nullExceptionFactory = exceptionFactoryOf(nullExceptionTypeInfo,
 				defaultExceptionMessageInfo.appendCause(FAILED_NOT_NULL_CAUSE));
+
+		internal = new Internal();
 	}
 
-	public final void isTrue(boolean expression) {
-		if (isDisabled() || expression)
-			return;
-		throw isTrueExceptionFactory.newException();
+	public final Internal internal() {
+		return internal;
 	}
 
-	public final void isTrue(boolean expression, Object errorMessage,
+	public final boolean isTrue(boolean expression) {
+		return internal.isTrue(expression, null, null, null, null);
+	}
+
+	public final boolean isTrue(boolean expression, Object errorMessage,
 			Object... errorMessageArgs) {
-		if (isDisabled() || expression)
-			return;
-		throw isTrueExceptionFactory.newException(errorMessage,
+		return internal.isTrue(expression, null, null, errorMessage,
 				errorMessageArgs);
 	}
 
-	public final void isTrueCm(boolean expression, String errorMessageTemplate,
-			Locale locale, Object... errorMessageArgs) {
-		if (isDisabled() || expression)
-			return;
-		throw isTrueExceptionFactory.newExceptionCm(errorMessageTemplate,
-				locale, errorMessageArgs);
+	public final boolean isTrueCm(boolean expression,
+			String errorMessageTemplate, Locale locale,
+			Object... errorMessageArgs) {
+		return internal.isTrue(expression, locale, errorMessageTemplate, null,
+				errorMessageArgs);
 	}
 
 	public final void isFalse(boolean expression) {
@@ -171,7 +196,7 @@ public class ObjectVerifier extends AVerifier {
 			@Nonnull Class<T> type, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
 		notNullCm(type, errorMessageTemplate, locale, errorMessageArgs);
-		notNull(obj, errorMessageTemplate, locale, errorMessageArgs);
+		notNullCm(obj, errorMessageTemplate, locale, errorMessageArgs);
 		if (isDisabled() || type.isInstance(obj))
 			return type.cast(obj);
 		throw isInstanceOfExceptionFactory

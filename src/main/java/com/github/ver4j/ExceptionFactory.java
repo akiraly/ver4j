@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 public class ExceptionFactory<T extends GeneralVerificationException>
 		implements ICategorized {
 	private final String category;
@@ -62,6 +64,25 @@ public class ExceptionFactory<T extends GeneralVerificationException>
 			Object[] errorMessageArgs, Map<?, ?> ctxtArgs, Throwable cause) {
 		return createException(locale, errorMessageTemplate, errorMessageArgs,
 				ctxtArgs, cause);
+	}
+
+	public final T newException(Locale locale, String errorMessageTemplate,
+			Object errorMessage, Object[] errorMessageArgs, Map<?, ?> ctxtArgs,
+			Throwable cause) {
+		Object[] args;
+
+		if (errorMessage != null) {
+			args = new Object[1];
+			if (!ArrayUtils.isEmpty(errorMessageArgs))
+				args[0] = messageInfo.createMessage(locale,
+						errorMessage.toString(), errorMessageArgs);
+			else
+				args[0] = errorMessage;
+		} else
+			args = errorMessageArgs;
+
+		return createException(locale, errorMessageTemplate, args, ctxtArgs,
+				cause);
 	}
 
 	protected T createException(Locale locale, String messageTemplate,
