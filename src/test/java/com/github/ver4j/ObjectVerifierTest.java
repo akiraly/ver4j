@@ -32,7 +32,7 @@ public class ObjectVerifierTest {
 		verifier.isTrue(false);
 		verifier.isTrue(false, "");
 		verifier.isTrue(false, "%s", "1");
-		verifier.isTrueCm(true, "", null);
+		verifier.isTrueCm(false, "", null);
 	}
 
 	@Test(expected = ArgumentVerificationException.class)

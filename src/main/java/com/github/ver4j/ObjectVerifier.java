@@ -53,7 +53,7 @@ public class ObjectVerifier extends AVerifier {
 		}
 	}
 
-	private final Internal internal;
+	private final Internal internal = new Internal();
 
 	public ObjectVerifier(String category,
 			@Nonnull ExceptionMessageInfo defaultExceptionMessageInfo,
@@ -76,8 +76,6 @@ public class ObjectVerifier extends AVerifier {
 						.appendCause(FAILED_IS_INSTANCE_OF_CAUSE));
 		nullExceptionFactory = exceptionFactoryOf(nullExceptionTypeInfo,
 				defaultExceptionMessageInfo.appendCause(FAILED_NOT_NULL_CAUSE));
-
-		internal = new Internal();
 	}
 
 	public final Internal internal() {
