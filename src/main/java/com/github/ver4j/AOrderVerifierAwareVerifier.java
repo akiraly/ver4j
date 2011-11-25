@@ -2,8 +2,8 @@ package com.github.ver4j;
 
 import javax.annotation.Nonnull;
 
-public abstract class AOrderVerifierAwareVerifier<C extends Comparable<C>>
-		extends AObjectVerifierAwareVerifier {
+public abstract class AOrderVerifierAwareVerifier<I, C extends Comparable<C>>
+		extends AObjectVerifierAwareVerifier<I> {
 	@Nonnull
 	private final OrderVerifier<C> orderVerifier;
 

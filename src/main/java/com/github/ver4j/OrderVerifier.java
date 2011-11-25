@@ -7,8 +7,10 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.Range;
 
+import com.github.ver4j.OrderVerifier.OrderInternal;
+
 public class OrderVerifier<C extends Comparable<C>> extends
-		AObjectVerifierAwareVerifier {
+		AObjectVerifierAwareVerifier<OrderInternal> {
 	private static final String FAILED_IS_BEFORE_CAUSE = "the orderable object is not before the reference";
 
 	private static final String FAILED_IS_AFTER_CAUSE = "the orderable object is not after the reference";
@@ -45,6 +47,15 @@ public class OrderVerifier<C extends Comparable<C>> extends
 
 	private final ExceptionFactory<?> inRangeExceptionFactory;
 
+	public interface OrderInternal {
+	}
+
+	private class NotVerifyingInternal implements OrderInternal {
+	}
+
+	private class VerifyingInternal implements OrderInternal {
+	}
+
 	public OrderVerifier(@Nonnull ObjectVerifier objectVerifier,
 			@Nonnull ExceptionTypeInfo<?> orderExceptionTypeInfo) {
 		super(objectVerifier);
@@ -66,6 +77,16 @@ public class OrderVerifier<C extends Comparable<C>> extends
 				orderExceptionTypeInfo, FAILED_EXCLUSIVE_BETWEEN_CAUSE);
 		inRangeExceptionFactory = exceptionFactoryOf(orderExceptionTypeInfo,
 				FAILED_IN_RANGE_CAUSE);
+	}
+
+	@Override
+	protected OrderInternal newNotVerifyingInternal() {
+		return new NotVerifyingInternal();
+	}
+
+	@Override
+	protected OrderInternal newVerifyingInternal() {
+		return new VerifyingInternal();
 	}
 
 	@Nonnull

@@ -13,7 +13,7 @@ import com.github.ver4j.arg.exception.ArgumentVerificationException;
 import com.github.ver4j.arg.exception.BatchArgumentVerificationException;
 import com.github.ver4j.arg.exception.NullPointerArgumentVerificationException;
 
-public class BatchVerifierTest {
+public class GroupVerifierTest {
 	private final ObjectVerifier objectVerifier = new ObjectVerifier(null,
 			new ExceptionMessageInfo("Test"),
 			ExceptionTypeInfo.of(ArgumentVerificationException.class),
@@ -21,7 +21,7 @@ public class BatchVerifierTest {
 			ExceptionTypeInfo
 					.of(NullPointerArgumentVerificationException.class));
 
-	private final BatchVerifier verifier = new BatchVerifier(objectVerifier,
+	private final GroupVerifier verifier = new GroupVerifier(objectVerifier,
 			ExceptionTypeInfo.of(BatchArgumentVerificationException.class));
 
 	// notEmpty*

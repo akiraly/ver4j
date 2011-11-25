@@ -10,7 +10,7 @@ public class CompositeVerifier extends ObjectVerifier {
 	public final NumberVerifier<?> number;
 
 	@Nonnull
-	public final BatchVerifier batch;
+	public final GroupVerifier group;
 
 	@Nonnull
 	public final FileVerifier file;
@@ -44,7 +44,7 @@ public class CompositeVerifier extends ObjectVerifier {
 			@Nonnull ExceptionTypeInfo<?> batchExceptionTypeInfo,
 			@Nonnull ExceptionTypeInfo<?> orderExceptionTypeInfo,
 			TextVerifier<CharSequence> text, NumberVerifier<?> number,
-			BatchVerifier batch, FileVerifier file, OrderVerifier<?> order,
+			GroupVerifier batch, FileVerifier file, OrderVerifier<?> order,
 			TimeVerifier<?> time) {
 		super(category, defaultExceptionMessageInfo, generalExceptionTypeInfo,
 				classCastExceptionTypeInfo, nullExceptionTypeInfo);
@@ -77,7 +77,7 @@ public class CompositeVerifier extends ObjectVerifier {
 			this.time = verifier;
 		}
 
-		this.batch = batch != null ? batch : new BatchVerifier(this,
+		group = batch != null ? batch : new GroupVerifier(this,
 				batchExceptionTypeInfo);
 
 		this.file = file != null ? file : new FileVerifier(this);
@@ -88,7 +88,8 @@ public class CompositeVerifier extends ObjectVerifier {
 		super.setDisabled(disabled);
 		text.setDisabled(disabled);
 		number.setDisabled(disabled);
-		batch.setDisabled(disabled);
+		group.setDisabled(disabled);
 		file.setDisabled(disabled);
+		order.setDisabled(disabled);
 	}
 }

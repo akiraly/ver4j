@@ -6,7 +6,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-public class ObjectVerifier extends AVerifier {
+import com.github.ver4j.ObjectVerifier.ObjectInternal;
+
+public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 	private static final String FAILED_IS_TRUE_CAUSE = "the expression is false";
 
 	private static final String FAILED_IS_FALSE_CAUSE = "the expression is true";
@@ -31,12 +33,26 @@ public class ObjectVerifier extends AVerifier {
 
 	private final ExceptionFactory<?> nullExceptionFactory;
 
-	public class Internal {
+	public interface ObjectInternal {
+		boolean isTrue(boolean expression, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs);
+	}
+
+	private class NotVerifyingInternal implements ObjectInternal {
+		@Override
+		public boolean isTrue(boolean expression, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs) {
+			return expression;
+		}
+	}
+
+	private class VerifyingInternal implements ObjectInternal {
+		@Override
 		public final boolean isTrue(final boolean expression, Locale locale,
 				String errorMessageTemplate, Object errorMessage,
 				Object[] errorMessageArgs) {
-			if (isDisabled())
-				return expression;
 
 			return new AVerifierTask<Boolean>() {
 				@Override
@@ -52,8 +68,6 @@ public class ObjectVerifier extends AVerifier {
 					errorMessage, errorMessageArgs);
 		}
 	}
-
-	private final Internal internal = new Internal();
 
 	public ObjectVerifier(String category,
 			@Nonnull ExceptionMessageInfo defaultExceptionMessageInfo,
@@ -78,25 +92,31 @@ public class ObjectVerifier extends AVerifier {
 				defaultExceptionMessageInfo.appendCause(FAILED_NOT_NULL_CAUSE));
 	}
 
-	public final Internal internal() {
-		return internal;
+	@Override
+	protected ObjectInternal newNotVerifyingInternal() {
+		return new NotVerifyingInternal();
+	}
+
+	@Override
+	protected ObjectInternal newVerifyingInternal() {
+		return new VerifyingInternal();
 	}
 
 	public final boolean isTrue(boolean expression) {
-		return internal.isTrue(expression, null, null, null, null);
+		return internal().isTrue(expression, null, null, null, null);
 	}
 
 	public final boolean isTrue(boolean expression, Object errorMessage,
 			Object... errorMessageArgs) {
-		return internal.isTrue(expression, null, null, errorMessage,
+		return internal().isTrue(expression, null, null, errorMessage,
 				errorMessageArgs);
 	}
 
 	public final boolean isTrueCm(boolean expression,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		return internal.isTrue(expression, locale, errorMessageTemplate, null,
-				errorMessageArgs);
+		return internal().isTrue(expression, locale, errorMessageTemplate,
+				null, errorMessageArgs);
 	}
 
 	public final void isFalse(boolean expression) {

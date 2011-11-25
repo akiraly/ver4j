@@ -6,8 +6,10 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.ver4j.TextVerifier.TextInternal;
+
 public class TextVerifier<S extends CharSequence> extends
-		AObjectVerifierAwareVerifier {
+		AObjectVerifierAwareVerifier<TextInternal> {
 	private static final String FAILED_NOT_EMPTY_CAUSE = "the text is null or empty";
 
 	private static final String FAILED_NOT_BLANK_CAUSE = "the text is null or empty or it contains only whitespace characters";
@@ -16,6 +18,15 @@ public class TextVerifier<S extends CharSequence> extends
 
 	private final ExceptionFactory<?> notBlankExceptionFactory;
 
+	public interface TextInternal {
+	}
+
+	private class NotVerifyingInternal implements TextInternal {
+	}
+
+	private class VerifyingInternal implements TextInternal {
+	}
+
 	public TextVerifier(@Nonnull ObjectVerifier objectVerifier,
 			@Nonnull ExceptionTypeInfo<?> textExceptionTypeInfo) {
 		super(objectVerifier);
@@ -23,6 +34,16 @@ public class TextVerifier<S extends CharSequence> extends
 				FAILED_NOT_EMPTY_CAUSE);
 		notBlankExceptionFactory = exceptionFactoryOf(textExceptionTypeInfo,
 				FAILED_NOT_BLANK_CAUSE);
+	}
+
+	@Override
+	protected TextInternal newNotVerifyingInternal() {
+		return new NotVerifyingInternal();
+	}
+
+	@Override
+	protected TextInternal newVerifyingInternal() {
+		return new VerifyingInternal();
 	}
 
 	@Nonnull

@@ -7,7 +7,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-public class BatchVerifier extends AObjectVerifierAwareVerifier {
+import com.github.ver4j.GroupVerifier.GroupInternal;
+
+public class GroupVerifier extends AObjectVerifierAwareVerifier<GroupInternal> {
 	private static final String FAILED_NOT_EMPTY_CAUSE = "the array/collection/iterable/map is null or emtpy";
 
 	private static final String FAILED_NO_NULL_ELEMENTS_CAUSE = "the array/iterable contains null element";
@@ -28,7 +30,16 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 
 	private final ExceptionFactory<?> noNullKeysValuesFactory;
 
-	public BatchVerifier(@Nonnull ObjectVerifier objectVerifier,
+	public interface GroupInternal {
+	}
+
+	private class NotVerifyingInternal implements GroupInternal {
+	}
+
+	private class VerifyingInternal implements GroupInternal {
+	}
+
+	public GroupVerifier(@Nonnull ObjectVerifier objectVerifier,
 			@Nonnull ExceptionTypeInfo<?> batchExceptionTypeInfo) {
 		super(objectVerifier);
 		notEmptyExceptionFactory = exceptionFactoryOf(batchExceptionTypeInfo,
@@ -41,6 +52,16 @@ public class BatchVerifier extends AObjectVerifierAwareVerifier {
 				FAILED_NO_NULL_VALUES_CAUSE);
 		noNullKeysValuesFactory = exceptionFactoryOf(batchExceptionTypeInfo,
 				FAILED_NO_NULL_KEYS_VALUES_CAUSE);
+	}
+
+	@Override
+	protected GroupInternal newNotVerifyingInternal() {
+		return new NotVerifyingInternal();
+	}
+
+	@Override
+	protected GroupInternal newVerifyingInternal() {
+		return new VerifyingInternal();
 	}
 
 	@Nonnull

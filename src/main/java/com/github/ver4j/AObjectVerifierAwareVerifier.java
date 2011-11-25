@@ -2,7 +2,8 @@ package com.github.ver4j;
 
 import javax.annotation.Nonnull;
 
-public abstract class AObjectVerifierAwareVerifier extends AVerifier {
+public abstract class AObjectVerifierAwareVerifier<I> extends
+		AInternalBasedVerifier<I> {
 	@Nonnull
 	private final ObjectVerifier objectVerifier;
 
