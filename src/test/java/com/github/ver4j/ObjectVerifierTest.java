@@ -99,12 +99,12 @@ public class ObjectVerifierTest {
 	@Test
 	public void testIsAssignableFromWithTrue() {
 		Assert.assertEquals(String.class,
-				verifier.assignableFrom(CharSequence.class, String.class));
+				verifier.isAssignableFrom(CharSequence.class, String.class));
 		Assert.assertEquals(String.class,
-				verifier.assignableFrom(CharSequence.class, String.class, ""));
-		Assert.assertEquals(String.class, verifier.assignableFrom(
+				verifier.isAssignableFrom(CharSequence.class, String.class, ""));
+		Assert.assertEquals(String.class, verifier.isAssignableFrom(
 				CharSequence.class, String.class, "%s", "1"));
-		Assert.assertEquals(String.class, verifier.assignableFromCm(
+		Assert.assertEquals(String.class, verifier.isAssignableFromCm(
 				CharSequence.class, String.class, "", null));
 	}
 
@@ -112,76 +112,76 @@ public class ObjectVerifierTest {
 	public void testIsAssignableFromWithFalseDisabled() {
 		verifier.setDisabled(true);
 		Assert.assertEquals(Integer.class,
-				verifier.assignableFrom(CharSequence.class, Integer.class));
+				verifier.isAssignableFrom(CharSequence.class, Integer.class));
 		Assert.assertEquals(Integer.class,
-				verifier.assignableFrom(CharSequence.class, Integer.class, ""));
-		Assert.assertEquals(Integer.class, verifier.assignableFrom(
+				verifier.isAssignableFrom(CharSequence.class, Integer.class, ""));
+		Assert.assertEquals(Integer.class, verifier.isAssignableFrom(
 				CharSequence.class, Integer.class, "%s", "1"));
-		Assert.assertEquals(Integer.class, verifier.assignableFromCm(
+		Assert.assertEquals(Integer.class, verifier.isAssignableFromCm(
 				CharSequence.class, Integer.class, "", null));
 	}
 
 	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsAssignableFromWithFalse1() {
-		verifier.assignableFrom(CharSequence.class, Integer.class);
+		verifier.isAssignableFrom(CharSequence.class, Integer.class);
 	}
 
 	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsAssignableFromWithFalse2() {
-		verifier.assignableFrom(CharSequence.class, Integer.class, "");
+		verifier.isAssignableFrom(CharSequence.class, Integer.class, "");
 	}
 
 	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsAssignableFromWithFalse3() {
-		verifier.assignableFrom(CharSequence.class, Integer.class, "%s", "1");
+		verifier.isAssignableFrom(CharSequence.class, Integer.class, "%s", "1");
 	}
 
 	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsAssignableFromCmWithFalse() {
-		verifier.assignableFromCm(CharSequence.class, Integer.class, "", null);
+		verifier.isAssignableFromCm(CharSequence.class, Integer.class, "", null);
 	}
 
 	// isInstanceOf*
 
 	@Test
 	public void testIsInstanceOfWithTrue() {
-		Assert.assertEquals("", verifier.instanceOf("", String.class));
-		Assert.assertEquals("", verifier.instanceOf("", String.class, ""));
+		Assert.assertEquals("", verifier.isInstanceOf("", String.class));
+		Assert.assertEquals("", verifier.isInstanceOf("", String.class, ""));
 		Assert.assertEquals("",
-				verifier.instanceOf("", String.class, "%s", "1"));
+				verifier.isInstanceOf("", String.class, "%s", "1"));
 		Assert.assertEquals("",
-				verifier.instanceOfCm("", String.class, "", null));
+				verifier.isInstanceOfCm("", String.class, "", null));
 	}
 
 	@Test(expected = ClassCastException.class)
 	public void testIsInstanceOfWithFalseDisabled() {
 		verifier.setDisabled(true);
-		Assert.assertEquals(null, verifier.instanceOf(1, String.class));
-		Assert.assertEquals(null, verifier.instanceOf(1, String.class, ""));
+		Assert.assertEquals(null, verifier.isInstanceOf(1, String.class));
+		Assert.assertEquals(null, verifier.isInstanceOf(1, String.class, ""));
 		Assert.assertEquals(null,
-				verifier.instanceOf(1, String.class, "%s", "1"));
+				verifier.isInstanceOf(1, String.class, "%s", "1"));
 		Assert.assertEquals(null,
-				verifier.instanceOfCm(1, String.class, "", null));
+				verifier.isInstanceOfCm(1, String.class, "", null));
 	}
 
 	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsInstanceOfWithFalse1() {
-		verifier.instanceOf(1, String.class, 1);
+		verifier.isInstanceOf(1, String.class, 1);
 	}
 
 	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsInstanceOfWithFalse2() {
-		verifier.instanceOf(1, String.class, "");
+		verifier.isInstanceOf(1, String.class, "");
 	}
 
 	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsInstanceOfWithFalse3() {
-		verifier.instanceOf(1, String.class, "%s", "1");
+		verifier.isInstanceOf(1, String.class, "%s", "1");
 	}
 
 	@Test(expected = ArgumentTypeVerificationException.class)
 	public void testIsInstanceOfCmWithFalse() {
-		verifier.instanceOfCm(1, String.class, "", null);
+		verifier.isInstanceOfCm(1, String.class, "", null);
 	}
 
 	// notNull*

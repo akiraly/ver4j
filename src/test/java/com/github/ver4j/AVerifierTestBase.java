@@ -2,9 +2,9 @@ package com.github.ver4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
+
+import javax.annotation.Nonnull;
 
 import junit.framework.Assert;
 
@@ -12,36 +12,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
-import com.github.ver4j.arg.exception.ArgumentTypeVerificationException;
-import com.github.ver4j.arg.exception.ArgumentVerificationException;
-import com.github.ver4j.arg.exception.NullPointerArgumentVerificationException;
 
 @RunWith(Parameterized.class)
-public class ObjectVerifierTrueTest {
+public abstract class AVerifierTestBase {
 
-	@Parameters
-	public static List<Object[]> constructorParameters() {
-		return Arrays.asList(new Object[][] { //
-				{ "isTrue", new Class<?>[] { Boolean.TYPE },
-						new Object[] { true }, true, new Object[] { false },
-						false, ArgumentVerificationException.class }, //
-				// { "isFalse", new Class<?>[] { Boolean.TYPE },
-				// new Object[] { false }, false,
-				// new Object[] { true }, true,
-				// ArgumentVerificationException.class } //
-				});
-	}
-
-	private final ObjectVerifier verifier = new ObjectVerifier(null,
-			new ExceptionMessageInfo("Test"),
-			ExceptionTypeInfo.of(ArgumentVerificationException.class),
-			ExceptionTypeInfo.of(ArgumentTypeVerificationException.class),
-			ExceptionTypeInfo
-					.of(NullPointerArgumentVerificationException.class));
-
-	private final Class<? extends IVerifier> verifierClass;
+	private final IVerifier verifier;
 	private final String methodName;
 	private final Class<?>[] firstParameterTypes;
 	private final Object[] passingParameters;
@@ -50,15 +25,19 @@ public class ObjectVerifierTrueTest {
 	private final Object failingReturnValue;
 	private final Class<? extends GeneralVerificationException> expectedExceptionType;
 
-	public ObjectVerifierTrueTest(String methodName,
-			Class<?>[] firstParameterTypes, Object[] passingParameters,
-			Object passingReturnValue, Object[] failingParameters,
+	public AVerifierTestBase(
+			@Nonnull String methodName,
+			@Nonnull Class<?>[] firstParameterTypes,
+			@Nonnull Object[] passingParameters,
+			Object passingReturnValue,
+			@Nonnull Object[] failingParameters,
 			Object failingReturnValue,
-			Class<? extends GeneralVerificationException> expectedExceptionType) {
+			@Nonnull Class<? extends GeneralVerificationException> expectedExceptionType) {
 		Assert.assertEquals(firstParameterTypes.length,
 				passingParameters.length);
+		Assert.assertEquals(firstParameterTypes.length,
+				failingParameters.length);
 
-		verifierClass = ObjectVerifier.class;
 		this.methodName = methodName;
 		this.firstParameterTypes = firstParameterTypes;
 		this.passingParameters = passingParameters;
@@ -66,6 +45,7 @@ public class ObjectVerifierTrueTest {
 		this.failingParameters = failingParameters;
 		this.failingReturnValue = failingReturnValue;
 		this.expectedExceptionType = expectedExceptionType;
+		verifier = newVerifier();
 	}
 
 	@Test
@@ -229,6 +209,9 @@ public class ObjectVerifierTrueTest {
 		testFailingCm("%s", Locale.GERMAN, new Object[] { 3.14 });
 	}
 
+	@Nonnull
+	protected abstract IVerifier newVerifier();
+
 	private void testPassingCm(String template, Locale locale, Object[] args)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException {
@@ -253,7 +236,7 @@ public class ObjectVerifierTrueTest {
 		try {
 			invokeFailingCm(method, template, locale, args);
 		} catch (InvocationTargetException e) {
-			if (!expectedExceptionType.isInstance(e.getCause()))
+			if (!expectedExceptionType.equals(e.getCause().getClass()))
 				throw e;
 			failedCorrectly = true;
 		}
@@ -284,7 +267,7 @@ public class ObjectVerifierTrueTest {
 		try {
 			invokeFailingMessage(method, message, args);
 		} catch (InvocationTargetException e) {
-			if (!expectedExceptionType.isInstance(e.getCause()))
+			if (!expectedExceptionType.equals(e.getCause().getClass()))
 				throw e;
 			failedCorrectly = true;
 		}
@@ -312,7 +295,7 @@ public class ObjectVerifierTrueTest {
 		try {
 			invokeFailingNoMessage(method);
 		} catch (InvocationTargetException e) {
-			if (!expectedExceptionType.isInstance(e.getCause()))
+			if (!expectedExceptionType.equals(e.getCause().getClass()))
 				throw e;
 			failedCorrectly = true;
 		}
@@ -389,57 +372,22 @@ public class ObjectVerifierTrueTest {
 	}
 
 	private Method getNoMessageMethod() throws NoSuchMethodException {
-		return verifierClass.getMethod(methodName, firstParameterTypes);
+		return verifier.getClass().getMethod(methodName, firstParameterTypes);
 	}
 
 	private Method getMessageMethod() throws NoSuchMethodException {
-		return verifierClass.getMethod(methodName, ArrayUtils.addAll(
-				firstParameterTypes, Object.class,
-				ArrayUtils.EMPTY_OBJECT_ARRAY.getClass()));
+		return verifier.getClass().getMethod(
+				methodName,
+				ArrayUtils.addAll(firstParameterTypes, Object.class,
+						ArrayUtils.EMPTY_OBJECT_ARRAY.getClass()));
 	}
 
 	private Method getCmMethod() throws NoSuchMethodException {
-		return verifierClass.getMethod(methodName + "Cm", ArrayUtils.addAll(
-				firstParameterTypes, String.class, Locale.class,
-				ArrayUtils.EMPTY_OBJECT_ARRAY.getClass()));
-	}
-
-	// isTrue*
-
-	@Test
-	public void testIsTrueWithTrue() {
-		verifier.isTrue(true);
-		verifier.isTrue(true, "");
-		verifier.isTrue(true, "%s", "1");
-		verifier.isTrueCm(true, "", null);
-	}
-
-	@Test
-	public void testIsTrueWithFalseDisabled() {
-		verifier.setDisabled(true);
-		verifier.isTrue(false);
-		verifier.isTrue(false, "");
-		verifier.isTrue(false, "%s", "1");
-		verifier.isTrueCm(false, "", null);
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsTrueWithFalse1() {
-		verifier.isTrue(false);
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsTrueWithFalse2() {
-		verifier.isTrue(false, "");
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsTrueWithFalse3() {
-		verifier.isTrue(false, "%s", "1");
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsTrueCmWithFalse() {
-		verifier.isTrueCm(false, "", null);
+		return verifier.getClass()
+				.getMethod(
+						methodName + "Cm",
+						ArrayUtils.addAll(firstParameterTypes, String.class,
+								Locale.class,
+								ArrayUtils.EMPTY_OBJECT_ARRAY.getClass()));
 	}
 }

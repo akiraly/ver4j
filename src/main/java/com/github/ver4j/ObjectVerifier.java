@@ -119,31 +119,31 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 				null, errorMessageArgs);
 	}
 
-	public final void isFalse(boolean expression) {
+	public final boolean isFalse(boolean expression) {
 		if (isDisabled() || !expression)
-			return;
+			return expression;
 		throw isFalseExceptionFactory.newException();
 	}
 
-	public final void isFalse(boolean expression, Object errorMessage,
+	public final boolean isFalse(boolean expression, Object errorMessage,
 			Object... errorMessageArgs) {
 		if (isDisabled() || !expression)
-			return;
+			return expression;
 		throw isFalseExceptionFactory.newException(errorMessage,
 				errorMessageArgs);
 	}
 
-	public final void isFalseCm(boolean expression,
+	public final boolean isFalseCm(boolean expression,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
 		if (isDisabled() || !expression)
-			return;
+			return expression;
 		throw isFalseExceptionFactory.newExceptionCm(errorMessageTemplate,
 				locale, errorMessageArgs);
 	}
 
 	@Nonnull
-	public final <C> Class<C> assignableFrom(@Nonnull Class<?> superType,
+	public final <C> Class<C> isAssignableFrom(@Nonnull Class<?> superType,
 			@Nonnull Class<C> type) {
 		notNull(superType);
 		notNull(type);
@@ -154,7 +154,7 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 	}
 
 	@Nonnull
-	public final <C> Class<C> assignableFrom(@Nonnull Class<?> superType,
+	public final <C> Class<C> isAssignableFrom(@Nonnull Class<?> superType,
 			@Nonnull Class<C> type, Object errorMessage,
 			Object... errorMessageArgs) {
 		notNull(superType, errorMessage, errorMessageArgs);
@@ -167,7 +167,7 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 	}
 
 	@Nonnull
-	public final <C> Class<C> assignableFromCm(@Nonnull Class<?> superType,
+	public final <C> Class<C> isAssignableFromCm(@Nonnull Class<?> superType,
 			@Nonnull Class<C> type, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
 		notNull(superType, errorMessageTemplate, locale, errorMessageArgs);
@@ -189,7 +189,7 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 	}
 
 	@Nonnull
-	public final <T> T instanceOf(@Nonnull Object obj, @Nonnull Class<T> type) {
+	public final <T> T isInstanceOf(@Nonnull Object obj, @Nonnull Class<T> type) {
 		notNull(type);
 		notNull(obj);
 		if (isDisabled() || type.isInstance(obj))
@@ -199,7 +199,7 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 	}
 
 	@Nonnull
-	public final <T> T instanceOf(@Nonnull Object obj, @Nonnull Class<T> type,
+	public final <T> T isInstanceOf(@Nonnull Object obj, @Nonnull Class<T> type,
 			Object errorMessage, Object... errorMessageArgs) {
 		notNull(type, errorMessage, errorMessageArgs);
 		notNull(obj, errorMessage, errorMessageArgs);
@@ -210,7 +210,7 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 	}
 
 	@Nonnull
-	public final <T> T instanceOfCm(@Nonnull Object obj,
+	public final <T> T isInstanceOfCm(@Nonnull Object obj,
 			@Nonnull Class<T> type, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
 		notNullCm(type, errorMessageTemplate, locale, errorMessageArgs);
