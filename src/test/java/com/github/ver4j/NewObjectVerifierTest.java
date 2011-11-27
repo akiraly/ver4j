@@ -15,30 +15,47 @@ public class NewObjectVerifierTest extends AVerifierTestBase {
 	public static List<Object[]> constructorParameters() {
 		Object test1 = new StringBuilder();
 
-		return Arrays.asList(new Object[][] { //
-						{ "isTrue", new Class<?>[] { Boolean.TYPE }, //
-								new Object[] { true }, true, //
-								new Object[] { false }, false, //
-								ArgumentVerificationException.class }, //
-						{ "isFalse", new Class<?>[] { Boolean.TYPE }, //
-								new Object[] { false }, false, //
-								new Object[] { true }, true, //
-								ArgumentVerificationException.class }, //
-						{ "notNull", new Class<?>[] { Object.class }, //
-								new Object[] { test1 }, test1, //
-								new Object[] { null }, null, //
-								NullPointerArgumentVerificationException.class } //
+		return Arrays
+				.asList(new Object[][] { //
+						{
+								"isTrue",
+								new Class<?>[] { Boolean.TYPE }, //
+								invocations(
+										of(true, true), //
+										of(ArgumentVerificationException.class,
+												false, false)) }, //
+						{
+								"isFalse",
+								new Class<?>[] { Boolean.TYPE }, //
+								invocations(
+										of(false, false), //
+										of(ArgumentVerificationException.class,
+												true, true)) }, //
+						{
+								"notNull",
+								new Class<?>[] { Object.class }, //
+								invocations(
+										of(test1, test1), //
+										of(NullPointerArgumentVerificationException.class,
+												null, new Object[] { null })) }, //
+						{ "isInstanceOf",
+								new Class<?>[] { Object.class, Class.class }, //
+								invocations(
+										of(test1, test1, CharSequence.class), //
+										of(ArgumentTypeVerificationException.class,
+												ClassCastException.class,
+												test1, test1,
+												StringBuffer.class), //
+										of(NullPointerArgumentVerificationException.class,
+												(Object) null, null,
+												StringBuffer.class)) } //
 				});
 	}
 
 	public NewObjectVerifierTest(String methodName,
-			Class<?>[] firstParameterTypes, Object[] passingParameters,
-			Object passingReturnValue, Object[] failingParameters,
-			Object failingReturnValue,
-			Class<? extends GeneralVerificationException> expectedExceptionType) {
-		super(methodName, firstParameterTypes, passingParameters,
-				passingReturnValue, failingParameters, failingReturnValue,
-				expectedExceptionType);
+			Class<?>[] firstParameterTypes,
+			MethodInvocationParams... invocationParams) {
+		super(methodName, firstParameterTypes, invocationParams);
 	}
 
 	@Override
