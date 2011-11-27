@@ -19,7 +19,7 @@ public abstract class AInternalBasedVerifier<I> extends AVerifier {
 	}
 
 	@Nonnull
-	protected final I internal() {
+	public final I internal() {
 		return internal;
 	}
 

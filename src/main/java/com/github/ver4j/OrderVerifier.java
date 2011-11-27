@@ -10,7 +10,7 @@ import org.apache.commons.lang3.Range;
 import com.github.ver4j.OrderVerifier.OrderInternal;
 
 public class OrderVerifier<C extends Comparable<C>> extends
-		AObjectVerifierAwareVerifier<OrderInternal> {
+		AObjectVerifierAwareVerifier<OrderInternal<C>> {
 	private static final String FAILED_IS_BEFORE_CAUSE = "the orderable object is not before the reference";
 
 	private static final String FAILED_IS_AFTER_CAUSE = "the orderable object is not after the reference";
@@ -47,13 +47,154 @@ public class OrderVerifier<C extends Comparable<C>> extends
 
 	private final ExceptionFactory<?> inRangeExceptionFactory;
 
-	public interface OrderInternal {
+	public interface OrderInternal<C> {
+		@Nonnull
+		<T extends C> T isBefore(@Nonnull T comparable, @Nonnull T reference,
+				Locale locale, String errorMessageTemplate,
+				Object errorMessage, Object[] errorMessageArgs);
+
+		@Nonnull
+		<T extends C> T isAfter(@Nonnull T comparable, @Nonnull T reference,
+				Locale locale, String errorMessageTemplate,
+				Object errorMessage, Object[] errorMessageArgs);
+
+		@Nonnull
+		<T extends C> T notBefore(@Nonnull T comparable, @Nonnull T reference,
+				Locale locale, String errorMessageTemplate,
+				Object errorMessage, Object[] errorMessageArgs);
+
+		@Nonnull
+		<T extends C> T notAfter(@Nonnull T comparable, @Nonnull T reference,
+				Locale locale, String errorMessageTemplate,
+				Object errorMessage, Object[] errorMessageArgs);
 	}
 
-	private class NotVerifyingInternal implements OrderInternal {
+	private class NotVerifyingInternal implements OrderInternal<C> {
+		@Override
+		public <T extends C> T isBefore(T comparable, T reference,
+				Locale locale, String errorMessageTemplate,
+				Object errorMessage, Object[] errorMessageArgs) {
+			return comparable;
+		}
+
+		@Override
+		public <T extends C> T isAfter(T comparable, T reference,
+				Locale locale, String errorMessageTemplate,
+				Object errorMessage, Object[] errorMessageArgs) {
+			return comparable;
+		}
+
+		@Override
+		public <T extends C> T notBefore(T comparable, T reference,
+				Locale locale, String errorMessageTemplate,
+				Object errorMessage, Object[] errorMessageArgs) {
+			return comparable;
+		};
+
+		@Override
+		public <T extends C> T notAfter(T comparable, T reference,
+				Locale locale, String errorMessageTemplate,
+				Object errorMessage, Object[] errorMessageArgs) {
+			return comparable;
+		};
 	}
 
-	private class VerifyingInternal implements OrderInternal {
+	private class VerifyingInternal implements OrderInternal<C> {
+		@Override
+		public <T extends C> T isBefore(final T comparable, final T reference,
+				final Locale locale, final String errorMessageTemplate,
+				final Object errorMessage, final Object[] errorMessageArgs) {
+			return new AVerifierTask<T>() {
+				@Override
+				protected T result() {
+					return comparable;
+				}
+
+				@Override
+				protected boolean isValid() {
+					object().internal().notNull(comparable, locale,
+							errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					object().internal().notNull(reference, locale,
+							errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					return comparable.compareTo(reference) < 0;
+				}
+			}.verify(isBeforeExceptionFactory, locale, errorMessageTemplate,
+					errorMessage, errorMessageArgs);
+		}
+
+		@Override
+		public <T extends C> T isAfter(final T comparable, final T reference,
+				final Locale locale, final String errorMessageTemplate,
+				final Object errorMessage, final Object[] errorMessageArgs) {
+			return new AVerifierTask<T>() {
+				@Override
+				protected T result() {
+					return comparable;
+				}
+
+				@Override
+				protected boolean isValid() {
+					object().internal().notNull(comparable, locale,
+							errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					object().internal().notNull(reference, locale,
+							errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					return comparable.compareTo(reference) > 0;
+				}
+			}.verify(isAfterExceptionFactory, locale, errorMessageTemplate,
+					errorMessage, errorMessageArgs);
+		}
+
+		@Override
+		public <T extends C> T notBefore(final T comparable, final T reference,
+				final Locale locale, final String errorMessageTemplate,
+				final Object errorMessage, final Object[] errorMessageArgs) {
+			return new AVerifierTask<T>() {
+				@Override
+				protected T result() {
+					return comparable;
+				}
+
+				@Override
+				protected boolean isValid() {
+					object().internal().notNull(comparable, locale,
+							errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					object().internal().notNull(reference, locale,
+							errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					return comparable.compareTo(reference) >= 0;
+				}
+			}.verify(notBeforeExceptionFactory, locale, errorMessageTemplate,
+					errorMessage, errorMessageArgs);
+		}
+
+		@Override
+		public <T extends C> T notAfter(final T comparable, final T reference,
+				final Locale locale, final String errorMessageTemplate,
+				final Object errorMessage, final Object[] errorMessageArgs) {
+			return new AVerifierTask<T>() {
+				@Override
+				protected T result() {
+					return comparable;
+				}
+
+				@Override
+				protected boolean isValid() {
+					object().internal().notNull(comparable, locale,
+							errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					object().internal().notNull(reference, locale,
+							errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					return comparable.compareTo(reference) <= 0;
+				}
+			}.verify(notAfterExceptionFactory, locale, errorMessageTemplate,
+					errorMessage, errorMessageArgs);
+		}
 	}
 
 	public OrderVerifier(@Nonnull ObjectVerifier objectVerifier,
@@ -80,169 +221,105 @@ public class OrderVerifier<C extends Comparable<C>> extends
 	}
 
 	@Override
-	protected OrderInternal newNotVerifyingInternal() {
+	protected OrderInternal<C> newNotVerifyingInternal() {
 		return new NotVerifyingInternal();
 	}
 
 	@Override
-	protected OrderInternal newVerifyingInternal() {
+	protected OrderInternal<C> newVerifyingInternal() {
 		return new VerifyingInternal();
 	}
 
 	@Nonnull
 	public final <T extends C> T isBefore(@Nonnull T comparable,
 			@Nonnull T reference) {
-		object().notNull(comparable);
-		object().notNull(reference);
-		if (isDisabled() || comparable.compareTo(reference) < 0)
-			return comparable;
-		throw isBeforeExceptionFactory.newException(
-				newComparableContext(comparable, reference), (Throwable) null);
+		return internal().isBefore(comparable, reference, null, null, null,
+				null);
 	}
 
 	@Nonnull
 	public final <T extends C> T isBefore(@Nonnull T comparable,
 			@Nonnull T reference, Object errorMessage,
 			Object... errorMessageArgs) {
-		object().notNull(comparable, errorMessage, errorMessageArgs);
-		object().notNull(reference, errorMessage, errorMessageArgs);
-		if (isDisabled() || comparable.compareTo(reference) < 0)
-			return comparable;
-		throw isBeforeExceptionFactory.newException(errorMessage,
-				errorMessageArgs, newComparableContext(comparable, reference),
-				null);
+		return internal().isBefore(comparable, reference, null, null,
+				errorMessage, errorMessageArgs);
 	}
 
 	@Nonnull
 	public final <T extends C> T isBeforeCm(@Nonnull T comparable,
 			@Nonnull T reference, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		object().notNullCm(comparable, errorMessageTemplate, locale,
-				errorMessageArgs);
-		object().notNullCm(reference, errorMessageTemplate, locale,
-				errorMessageArgs);
-		if (isDisabled() || comparable.compareTo(reference) < 0)
-			return comparable;
-		throw isBeforeExceptionFactory.newExceptionCm(errorMessageTemplate,
-				locale, errorMessageArgs,
-				newComparableContext(comparable, reference), null);
+		return internal().isBefore(comparable, reference, locale,
+				errorMessageTemplate, null, errorMessageArgs);
 	}
 
 	@Nonnull
 	public final <T extends C> T isAfter(@Nonnull T comparable,
 			@Nonnull T reference) {
-		object().notNull(comparable);
-		object().notNull(reference);
-		if (isDisabled() || comparable.compareTo(reference) > 0)
-			return comparable;
-		throw isAfterExceptionFactory.newException(
-				newComparableContext(comparable, reference), (Throwable) null);
+		return internal()
+				.isAfter(comparable, reference, null, null, null, null);
 	}
 
 	@Nonnull
 	public final <T extends C> T isAfter(@Nonnull T comparable,
 			@Nonnull T reference, Object errorMessage,
 			Object... errorMessageArgs) {
-		object().notNull(comparable, errorMessage, errorMessageArgs);
-		object().notNull(reference, errorMessage, errorMessageArgs);
-		if (isDisabled() || comparable.compareTo(reference) > 0)
-			return comparable;
-		throw isAfterExceptionFactory.newException(errorMessage,
-				errorMessageArgs, newComparableContext(comparable, reference),
-				null);
+		return internal().isAfter(comparable, reference, null, null,
+				errorMessage, errorMessageArgs);
 	}
 
 	@Nonnull
 	public final <T extends C> T isAfterCm(@Nonnull T comparable,
 			@Nonnull T reference, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		object().notNullCm(comparable, errorMessageTemplate, locale,
-				errorMessageArgs);
-		object().notNullCm(reference, errorMessageTemplate, locale,
-				errorMessageArgs);
-		if (isDisabled() || comparable.compareTo(reference) > 0)
-			return comparable;
-		throw isAfterExceptionFactory.newExceptionCm(errorMessageTemplate,
-				locale, errorMessageArgs,
-				newComparableContext(comparable, reference), null);
+		return internal().isAfter(comparable, reference, locale,
+				errorMessageTemplate, null, errorMessageArgs);
 	}
 
 	@Nonnull
 	public final <T extends C> T notBefore(@Nonnull T comparable,
 			@Nonnull T reference) {
-		object().notNull(comparable);
-		object().notNull(reference);
-		if (isDisabled() || comparable.compareTo(reference) >= 0)
-			return comparable;
-		throw notBeforeExceptionFactory.newException(
-				newComparableContext(comparable, reference), (Throwable) null);
+		return internal().notBefore(comparable, reference, null, null, null,
+				null);
 	}
 
 	@Nonnull
 	public final <T extends C> T notBefore(@Nonnull T comparable,
 			@Nonnull T reference, Object errorMessage,
 			Object... errorMessageArgs) {
-		object().notNull(comparable, errorMessage, errorMessageArgs);
-		object().notNull(reference, errorMessage, errorMessageArgs);
-		if (isDisabled() || comparable.compareTo(reference) >= 0)
-			return comparable;
-		throw notBeforeExceptionFactory.newException(errorMessage,
-				errorMessageArgs, newComparableContext(comparable, reference),
-				null);
+		return internal().notBefore(comparable, reference, null, null,
+				errorMessage, errorMessageArgs);
 	}
 
 	@Nonnull
 	public final <T extends C> T notBeforeCm(@Nonnull T comparable,
 			@Nonnull T reference, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		object().notNullCm(comparable, errorMessageTemplate, locale,
-				errorMessageArgs);
-		object().notNullCm(reference, errorMessageTemplate, locale,
-				errorMessageArgs);
-		if (isDisabled() || comparable.compareTo(reference) >= 0)
-			return comparable;
-		throw notBeforeExceptionFactory.newExceptionCm(errorMessageTemplate,
-				locale, errorMessageArgs,
-				newComparableContext(comparable, reference), null);
+		return internal().notBefore(comparable, reference, locale,
+				errorMessageTemplate, null, errorMessageArgs);
 	}
 
 	@Nonnull
 	public final <T extends C> T notAfter(@Nonnull T comparable,
 			@Nonnull T reference) {
-		object().notNull(comparable);
-		object().notNull(reference);
-		if (isDisabled() || comparable.compareTo(reference) <= 0)
-			return comparable;
-		throw notAfterExceptionFactory.newException(
-				newComparableContext(comparable, reference), (Throwable) null);
+		return internal().notAfter(comparable, reference, null, null, null,
+				null);
 	}
 
 	@Nonnull
 	public final <T extends C> T notAfter(@Nonnull T comparable,
 			@Nonnull T reference, Object errorMessage,
 			Object... errorMessageArgs) {
-		object().notNull(comparable, errorMessage, errorMessageArgs);
-		object().notNull(reference, errorMessage, errorMessageArgs);
-		if (isDisabled() || comparable.compareTo(reference) <= 0)
-			return comparable;
-		throw notAfterExceptionFactory.newException(errorMessage,
-				errorMessageArgs, newComparableContext(comparable, reference),
-				null);
+		return internal().notAfter(comparable, reference, null, null,
+				errorMessage, errorMessageArgs);
 	}
 
 	@Nonnull
 	public final <T extends C> T notAfterCm(@Nonnull T comparable,
 			@Nonnull T reference, String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		object().notNullCm(comparable, errorMessageTemplate, locale,
-				errorMessageArgs);
-		object().notNullCm(reference, errorMessageTemplate, locale,
-				errorMessageArgs);
-		if (isDisabled() || comparable.compareTo(reference) <= 0)
-			return comparable;
-		throw notAfterExceptionFactory.newExceptionCm(errorMessageTemplate,
-				locale, errorMessageArgs,
-				newComparableContext(comparable, reference), null);
+		return internal().notAfter(comparable, reference, locale,
+				errorMessageTemplate, null, errorMessageArgs);
 	}
 
 	@Nonnull

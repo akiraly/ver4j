@@ -37,7 +37,7 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 
 	private final ExceptionFactory<?> nullExceptionFactory;
 
-	protected interface ObjectInternal {
+	public interface ObjectInternal {
 		boolean isTrue(boolean expression, Locale locale,
 				String errorMessageTemplate, Object errorMessage,
 				Object[] errorMessageArgs);
