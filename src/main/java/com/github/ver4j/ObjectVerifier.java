@@ -13,7 +13,9 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 
 	private static final String FAILED_IS_FALSE_CAUSE = "the expression is true";
 
-	private static final String FAILED_IS_ASSIGNABLE_FROM_CAUSE = "the class can not be casted to the reference class";
+	private static final String FAILED_IS_SAME_AS_OR_SUPERTYPE_OF = "the type is not the same as/not a super type of the reference type";
+
+	private static final String FAILED_IS_SAME_AS_OR_SUBTYPE_OF = "the type is not the same as/not a sub type of the reference type";
 
 	private static final String FAILED_IS_INSTANCE_OF_CAUSE = "the object is not an instance of the reference class";
 
@@ -27,14 +29,42 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 
 	private final ExceptionFactory<?> isFalseExceptionFactory;
 
-	private final ExceptionFactory<?> isAssignableFromExceptionFactory;
+	private final ExceptionFactory<?> isSameAsOrSuperTypeOfExceptionFactory;
+
+	private final ExceptionFactory<?> isSameAsOrSubTypeOfExceptionFactory;
 
 	private final ExceptionFactory<?> isInstanceOfExceptionFactory;
 
 	private final ExceptionFactory<?> nullExceptionFactory;
 
-	public interface ObjectInternal {
+	protected interface ObjectInternal {
 		boolean isTrue(boolean expression, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs);
+
+		boolean isFalse(boolean expression, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs);
+
+		@Nonnull
+		<T> T notNull(@Nonnull T object, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs);
+
+		@Nonnull
+		<T> T isInstanceOf(@Nonnull Object object, @Nonnull Class<T> type,
+				Locale locale, String errorMessageTemplate,
+				Object errorMessage, Object[] errorMessageArgs);
+
+		@Nonnull
+		<C> Class<C> isSameAsOrSuperTypeOf(@Nonnull Class<C> type,
+				@Nonnull Class<?> referenceType, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs);
+
+		@Nonnull
+		<C> Class<C> isSameAsOrSubTypeOf(@Nonnull Class<C> type,
+				@Nonnull Class<?> referenceType, Locale locale,
 				String errorMessageTemplate, Object errorMessage,
 				Object[] errorMessageArgs);
 	}
@@ -45,6 +75,43 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 				String errorMessageTemplate, Object errorMessage,
 				Object[] errorMessageArgs) {
 			return expression;
+		}
+
+		@Override
+		public boolean isFalse(boolean expression, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs) {
+			return expression;
+		}
+
+		@Override
+		public <T> T notNull(T object, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs) {
+			return object;
+		}
+
+		@Override
+		public <T> T isInstanceOf(Object object, Class<T> type, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs) {
+			return type.cast(object);
+		}
+
+		@Override
+		public <C> Class<C> isSameAsOrSuperTypeOf(Class<C> type,
+				Class<?> referenceType, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs) {
+			return type;
+		}
+
+		@Override
+		public <C> Class<C> isSameAsOrSubTypeOf(Class<C> type,
+				Class<?> referenceType, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs) {
+			return type;
 		}
 	}
 
@@ -67,6 +134,134 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 			}.verify(isTrueExceptionFactory, locale, errorMessageTemplate,
 					errorMessage, errorMessageArgs);
 		}
+
+		@Override
+		public boolean isFalse(final boolean expression, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs) {
+			return new AVerifierTask<Boolean>() {
+				@Override
+				protected Boolean result() {
+					return expression;
+				}
+
+				@Override
+				protected boolean isValid() {
+					return !expression;
+				}
+			}.verify(isFalseExceptionFactory, locale, errorMessageTemplate,
+					errorMessage, errorMessageArgs);
+		}
+
+		@Override
+		public <T> T notNull(final T object, Locale locale,
+				String errorMessageTemplate, Object errorMessage,
+				Object[] errorMessageArgs) {
+			return new AVerifierTask<T>() {
+				@Override
+				protected T result() {
+					return object;
+				}
+
+				@Override
+				protected boolean isValid() {
+					return object != null;
+				}
+			}.verify(nullExceptionFactory, locale, errorMessageTemplate,
+					errorMessage, errorMessageArgs);
+		}
+
+		@Override
+		public <T> T isInstanceOf(final Object object, final Class<T> type,
+				final Locale locale, final String errorMessageTemplate,
+				final Object errorMessage, final Object[] errorMessageArgs) {
+			return new AVerifierTask<T>() {
+				@Override
+				protected T result() {
+					return type.cast(object);
+				}
+
+				@Override
+				protected boolean isValid() {
+					notNull(object, locale, errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					notNull(type, locale, errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					return type.isInstance(object);
+				}
+
+				@Override
+				protected Map<Object, Object> errorContext() {
+					Map<Object, Object> context = newContextMap();
+					context.put("tested object", object);
+					context.put("reference class", type);
+					return context;
+				}
+			}.verify(isInstanceOfExceptionFactory, locale,
+					errorMessageTemplate, errorMessage, errorMessageArgs);
+		}
+
+		@Override
+		public <C> Class<C> isSameAsOrSuperTypeOf(final Class<C> type,
+				final Class<?> referenceType, final Locale locale,
+				final String errorMessageTemplate, final Object errorMessage,
+				final Object[] errorMessageArgs) {
+			return new AVerifierTask<Class<C>>() {
+				@Override
+				protected Class<C> result() {
+					return type;
+				}
+
+				@Override
+				protected boolean isValid() {
+					notNull(type, locale, errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					notNull(referenceType, locale, errorMessageTemplate,
+							errorMessage, errorMessageArgs);
+					return type.isAssignableFrom(referenceType);
+				}
+
+				@Override
+				protected Map<Object, Object> errorContext() {
+					Map<Object, Object> context = newContextMap();
+					context.put("tested type", type);
+					context.put("reference type", referenceType);
+					return context;
+				}
+			}.verify(isSameAsOrSuperTypeOfExceptionFactory, locale,
+					errorMessageTemplate, errorMessage, errorMessageArgs);
+		}
+
+		@Override
+		public <C> Class<C> isSameAsOrSubTypeOf(final Class<C> type,
+				final Class<?> referenceType, final Locale locale,
+				final String errorMessageTemplate, final Object errorMessage,
+				final Object[] errorMessageArgs) {
+			return new AVerifierTask<Class<C>>() {
+				@Override
+				protected Class<C> result() {
+					return type;
+				}
+
+				@Override
+				protected boolean isValid() {
+					notNull(type, locale, errorMessageTemplate, errorMessage,
+							errorMessageArgs);
+					notNull(referenceType, locale, errorMessageTemplate,
+							errorMessage, errorMessageArgs);
+					return referenceType.isAssignableFrom(type);
+				}
+
+				@Override
+				protected Map<Object, Object> errorContext() {
+					Map<Object, Object> context = newContextMap();
+					context.put("tested type", type);
+					context.put("reference type", referenceType);
+					return context;
+				}
+			}.verify(isSameAsOrSubTypeOfExceptionFactory, locale,
+					errorMessageTemplate, errorMessage, errorMessageArgs);
+		}
 	}
 
 	public ObjectVerifier(String category,
@@ -80,16 +275,20 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 				defaultExceptionMessageInfo.appendCause(FAILED_IS_TRUE_CAUSE));
 		isFalseExceptionFactory = exceptionFactoryOf(generalExceptionTypeInfo,
 				defaultExceptionMessageInfo.appendCause(FAILED_IS_FALSE_CAUSE));
-		isAssignableFromExceptionFactory = exceptionFactoryOf(
-				classCastExceptionTypeInfo,
-				defaultExceptionMessageInfo
-						.appendCause(FAILED_IS_ASSIGNABLE_FROM_CAUSE));
+		nullExceptionFactory = exceptionFactoryOf(nullExceptionTypeInfo,
+				defaultExceptionMessageInfo.appendCause(FAILED_NOT_NULL_CAUSE));
 		isInstanceOfExceptionFactory = exceptionFactoryOf(
 				classCastExceptionTypeInfo,
 				defaultExceptionMessageInfo
 						.appendCause(FAILED_IS_INSTANCE_OF_CAUSE));
-		nullExceptionFactory = exceptionFactoryOf(nullExceptionTypeInfo,
-				defaultExceptionMessageInfo.appendCause(FAILED_NOT_NULL_CAUSE));
+		isSameAsOrSuperTypeOfExceptionFactory = exceptionFactoryOf(
+				classCastExceptionTypeInfo,
+				defaultExceptionMessageInfo
+						.appendCause(FAILED_IS_SAME_AS_OR_SUPERTYPE_OF));
+		isSameAsOrSubTypeOfExceptionFactory = exceptionFactoryOf(
+				classCastExceptionTypeInfo,
+				defaultExceptionMessageInfo
+						.appendCause(FAILED_IS_SAME_AS_OR_SUBTYPE_OF));
 	}
 
 	@Override
@@ -120,145 +319,108 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 	}
 
 	public final boolean isFalse(boolean expression) {
-		if (isDisabled() || !expression)
-			return expression;
-		throw isFalseExceptionFactory.newException();
+		return internal().isFalse(expression, null, null, null, null);
 	}
 
 	public final boolean isFalse(boolean expression, Object errorMessage,
 			Object... errorMessageArgs) {
-		if (isDisabled() || !expression)
-			return expression;
-		throw isFalseExceptionFactory.newException(errorMessage,
+		return internal().isFalse(expression, null, null, errorMessage,
 				errorMessageArgs);
 	}
 
 	public final boolean isFalseCm(boolean expression,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		if (isDisabled() || !expression)
-			return expression;
-		throw isFalseExceptionFactory.newExceptionCm(errorMessageTemplate,
-				locale, errorMessageArgs);
-	}
-
-	@Nonnull
-	public final <C> Class<C> isAssignableFrom(@Nonnull Class<?> superType,
-			@Nonnull Class<C> type) {
-		notNull(superType);
-		notNull(type);
-		if (isDisabled() || superType.isAssignableFrom(type))
-			return type;
-		throw isAssignableFromExceptionFactory.newException(
-				newAssignableFromContext(superType, type), (Throwable) null);
-	}
-
-	@Nonnull
-	public final <C> Class<C> isAssignableFrom(@Nonnull Class<?> superType,
-			@Nonnull Class<C> type, Object errorMessage,
-			Object... errorMessageArgs) {
-		notNull(superType, errorMessage, errorMessageArgs);
-		notNull(type, errorMessage, errorMessageArgs);
-		if (isDisabled() || superType.isAssignableFrom(type))
-			return type;
-		throw isAssignableFromExceptionFactory.newException(errorMessage,
-				errorMessageArgs, newAssignableFromContext(superType, type),
-				null);
-	}
-
-	@Nonnull
-	public final <C> Class<C> isAssignableFromCm(@Nonnull Class<?> superType,
-			@Nonnull Class<C> type, String errorMessageTemplate, Locale locale,
-			Object... errorMessageArgs) {
-		notNull(superType, errorMessageTemplate, locale, errorMessageArgs);
-		notNull(type, errorMessageTemplate, locale, errorMessageArgs);
-		if (isDisabled() || superType.isAssignableFrom(type))
-			return type;
-		throw isAssignableFromExceptionFactory.newExceptionCm(
-				errorMessageTemplate, locale, errorMessageArgs,
-				newAssignableFromContext(superType, type), null);
-	}
-
-	@Nonnull
-	private final Map<Object, Object> newAssignableFromContext(
-			@Nonnull Class<?> superType, @Nonnull Class<?> type) {
-		Map<Object, Object> context = newContextMap();
-		context.put("reference class", superType);
-		context.put("tested class", type);
-		return context;
-	}
-
-	@Nonnull
-	public final <T> T isInstanceOf(@Nonnull Object obj, @Nonnull Class<T> type) {
-		notNull(type);
-		notNull(obj);
-		if (isDisabled() || type.isInstance(obj))
-			return type.cast(obj);
-		throw isInstanceOfExceptionFactory.newException(
-				newInstanceOfContext(obj, type), (Throwable) null);
-	}
-
-	@Nonnull
-	public final <T> T isInstanceOf(@Nonnull Object obj, @Nonnull Class<T> type,
-			Object errorMessage, Object... errorMessageArgs) {
-		notNull(type, errorMessage, errorMessageArgs);
-		notNull(obj, errorMessage, errorMessageArgs);
-		if (isDisabled() || type.isInstance(obj))
-			return type.cast(obj);
-		throw isInstanceOfExceptionFactory.newException(errorMessage,
-				errorMessageArgs, newInstanceOfContext(obj, type), null);
-	}
-
-	@Nonnull
-	public final <T> T isInstanceOfCm(@Nonnull Object obj,
-			@Nonnull Class<T> type, String errorMessageTemplate, Locale locale,
-			Object... errorMessageArgs) {
-		notNullCm(type, errorMessageTemplate, locale, errorMessageArgs);
-		notNullCm(obj, errorMessageTemplate, locale, errorMessageArgs);
-		if (isDisabled() || type.isInstance(obj))
-			return type.cast(obj);
-		throw isInstanceOfExceptionFactory
-				.newExceptionCm(errorMessageTemplate, locale, errorMessageArgs,
-						newInstanceOfContext(obj, type), null);
-	}
-
-	@Nonnull
-	private final Map<Object, Object> newInstanceOfContext(@Nonnull Object obj,
-			@Nonnull Class<?> type) {
-		Map<Object, Object> context = newContextMap();
-		context.put("tested object", obj);
-		context.put("reference class", type);
-		return context;
+		return internal().isFalse(expression, locale, errorMessageTemplate,
+				null, errorMessageArgs);
 	}
 
 	@Nonnull
 	public final <T> T notNull(@Nonnull T object) {
-		if (isDisabled() || object != null)
-			return object;
-		throw nullExceptionFactory.newException();
+		return internal().notNull(object, null, null, null, null);
 	}
 
 	@Nonnull
 	public final <T> T notNull(@Nonnull T object, Object errorMessage,
 			Object... errorMessageArgs) {
-		if (isDisabled() || object != null)
-			return object;
-		throw nullExceptionFactory.newException(errorMessage, errorMessageArgs);
+		return internal().notNull(object, null, null, errorMessage,
+				errorMessageArgs);
 	}
 
 	@Nonnull
 	public final <T> T notNullCm(@Nonnull T object,
 			String errorMessageTemplate, Locale locale,
 			Object... errorMessageArgs) {
-		if (isDisabled() || object != null)
-			return object;
-		throw nullExceptionFactory.newExceptionCm(errorMessageTemplate, locale,
+		return internal().notNull(object, locale, errorMessageTemplate, null,
 				errorMessageArgs);
 	}
 
 	@Nonnull
-	protected final Map<Object, Object> newContextMap() {
-		return new LinkedHashMap<Object, Object>();
+	public final <T> T isInstanceOf(@Nonnull Object object,
+			@Nonnull Class<T> type) {
+		return internal().isInstanceOf(object, type, null, null, null, null);
+	}
+
+	@Nonnull
+	public final <T> T isInstanceOf(@Nonnull Object object,
+			@Nonnull Class<T> type, Object errorMessage,
+			Object... errorMessageArgs) {
+		return internal().isInstanceOf(object, type, null, null, errorMessage,
+				errorMessageArgs);
+	}
+
+	@Nonnull
+	public final <T> T isInstanceOfCm(@Nonnull Object object,
+			@Nonnull Class<T> type, String errorMessageTemplate, Locale locale,
+			Object... errorMessageArgs) {
+		return internal().isInstanceOf(object, type, locale,
+				errorMessageTemplate, null, errorMessageArgs);
+	}
+
+	@Nonnull
+	public final <C> Class<C> isSameAsOrSuperTypeOf(@Nonnull Class<C> type,
+			@Nonnull Class<?> referenceType) {
+		return internal().isSameAsOrSuperTypeOf(type, referenceType, null,
+				null, null, null);
+	}
+
+	@Nonnull
+	public final <C> Class<C> isSameAsOrSuperTypeOf(@Nonnull Class<C> type,
+			@Nonnull Class<?> referenceType, Object errorMessage,
+			Object... errorMessageArgs) {
+		return internal().isSameAsOrSuperTypeOf(type, referenceType, null,
+				null, errorMessage, errorMessageArgs);
+	}
+
+	@Nonnull
+	public final <C> Class<C> isSameAsOrSuperTypeOfCm(@Nonnull Class<C> type,
+			@Nonnull Class<?> referenceType, String errorMessageTemplate,
+			Locale locale, Object... errorMessageArgs) {
+		return internal().isSameAsOrSuperTypeOf(type, referenceType, locale,
+				errorMessageTemplate, null, errorMessageArgs);
+	}
+
+	@Nonnull
+	public final <C> Class<C> isSameAsOrSubTypeOf(@Nonnull Class<C> type,
+			@Nonnull Class<?> referenceType) {
+		return internal().isSameAsOrSubTypeOf(type, referenceType, null, null,
+				null, null);
+	}
+
+	@Nonnull
+	public final <C> Class<C> isSameAsOrSubTypeOf(@Nonnull Class<C> type,
+			@Nonnull Class<?> referenceType, Object errorMessage,
+			Object... errorMessageArgs) {
+		return internal().isSameAsOrSubTypeOf(type, referenceType, null, null,
+				errorMessage, errorMessageArgs);
+	}
+
+	@Nonnull
+	public final <C> Class<C> isSameAsOrSubTypeOfCm(@Nonnull Class<C> type,
+			@Nonnull Class<?> referenceType, String errorMessageTemplate,
+			Locale locale, Object... errorMessageArgs) {
+		return internal().isSameAsOrSubTypeOf(type, referenceType, locale,
+				errorMessageTemplate, null, errorMessageArgs);
 	}
 
 	@Nonnull
@@ -269,5 +431,10 @@ public class ObjectVerifier extends AInternalBasedVerifier<ObjectInternal> {
 	@Override
 	public final String getCategory() {
 		return category;
+	}
+
+	@Nonnull
+	protected Map<Object, Object> newContextMap() {
+		return new LinkedHashMap<Object, Object>();
 	}
 }

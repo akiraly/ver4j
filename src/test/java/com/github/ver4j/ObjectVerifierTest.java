@@ -1,225 +1,114 @@
 package com.github.ver4j;
 
-import junit.framework.Assert;
+import java.util.Arrays;
+import java.util.List;
 
-import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
 
 import com.github.ver4j.arg.exception.ArgumentTypeVerificationException;
 import com.github.ver4j.arg.exception.ArgumentVerificationException;
 import com.github.ver4j.arg.exception.NullPointerArgumentVerificationException;
 
-public class ObjectVerifierTest {
-	private final ObjectVerifier verifier = new ObjectVerifier(null,
-			new ExceptionMessageInfo("Test"),
-			ExceptionTypeInfo.of(ArgumentVerificationException.class),
-			ExceptionTypeInfo.of(ArgumentTypeVerificationException.class),
-			ExceptionTypeInfo
-					.of(NullPointerArgumentVerificationException.class));
+public class ObjectVerifierTest extends AVerifierTestBase {
 
-	// isTrue*
+	@Parameters
+	public static List<Object[]> constructorParameters() {
+		Object test1 = new StringBuilder();
 
-	@Test
-	public void testIsTrueWithTrue() {
-		verifier.isTrue(true);
-		verifier.isTrue(true, "");
-		verifier.isTrue(true, "%s", "1");
-		verifier.isTrueCm(true, "", null);
+		return Arrays
+				.asList(new Object[][] { //
+						{
+								"isTrue",
+								new Class<?>[] { Boolean.TYPE }, //
+								invocations(
+										of(true, true), //
+										of(ArgumentVerificationException.class,
+												false, false)) }, //
+						{
+								"isFalse",
+								new Class<?>[] { Boolean.TYPE }, //
+								invocations(
+										of(false, false), //
+										of(ArgumentVerificationException.class,
+												true, true)) }, //
+						{
+								"notNull",
+								new Class<?>[] { Object.class }, //
+								invocations(
+										of(test1, test1), //
+										of(NullPointerArgumentVerificationException.class,
+												null, new Object[] { null })) }, //
+						{ "isInstanceOf",
+								new Class<?>[] { Object.class, Class.class }, //
+								invocations(
+										of(test1, test1, CharSequence.class), //
+										of(ArgumentTypeVerificationException.class,
+												ClassCastException.class,
+												test1, test1,
+												StringBuffer.class), //
+										of(ArgumentTypeVerificationException.class,
+												(Object) null, null,
+												StringBuffer.class), //
+										of(ArgumentTypeVerificationException.class,
+												NullPointerException.class,
+												test1, test1, null)) }, //
+						{ "isSameAsOrSuperTypeOf",
+								new Class<?>[] { Class.class, Class.class }, //
+								invocations(
+										of(CharSequence.class,
+												CharSequence.class,
+												CharSequence.class), //
+										of(CharSequence.class,
+												CharSequence.class,
+												String.class), //
+										of(ArgumentTypeVerificationException.class,
+												Integer.class, Integer.class,
+												StringBuffer.class), //
+										of(ArgumentTypeVerificationException.class,
+												String.class, String.class,
+												CharSequence.class), //
+										of(ArgumentTypeVerificationException.class,
+												(Object) null, null,
+												StringBuffer.class), //
+										of(ArgumentTypeVerificationException.class,
+												Integer.class, Integer.class,
+												null)) }, //
+						{ "isSameAsOrSubTypeOf",
+								new Class<?>[] { Class.class, Class.class }, //
+								invocations(
+										of(CharSequence.class,
+												CharSequence.class,
+												CharSequence.class), //
+										of(String.class, String.class,
+												CharSequence.class), //
+										of(ArgumentTypeVerificationException.class,
+												Integer.class, Integer.class,
+												StringBuffer.class), //
+										of(ArgumentTypeVerificationException.class,
+												CharSequence.class,
+												CharSequence.class,
+												StringBuffer.class), //
+										of(ArgumentTypeVerificationException.class,
+												(Object) null, null,
+												StringBuffer.class), //
+										of(ArgumentTypeVerificationException.class,
+												Integer.class, Integer.class,
+												null)) } //
+				});
 	}
 
-	@Test
-	public void testIsTrueWithFalseDisabled() {
-		verifier.setDisabled(true);
-		verifier.isTrue(false);
-		verifier.isTrue(false, "");
-		verifier.isTrue(false, "%s", "1");
-		verifier.isTrueCm(false, "", null);
+	public ObjectVerifierTest(String methodName,
+			Class<?>[] firstParameterTypes,
+			MethodInvocationParams... invocationParams) {
+		super(methodName, firstParameterTypes, invocationParams);
 	}
 
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsTrueWithFalse1() {
-		verifier.isTrue(false);
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsTrueWithFalse2() {
-		verifier.isTrue(false, "");
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsTrueWithFalse3() {
-		verifier.isTrue(false, "%s", "1");
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsTrueCmWithFalse() {
-		verifier.isTrueCm(false, "", null);
-	}
-
-	// isFalse*
-
-	@Test
-	public void testIsFalseWithFalse() {
-		verifier.isFalse(false);
-		verifier.isFalse(false, "");
-		verifier.isFalse(false, "%s", "1");
-		verifier.isFalseCm(false, "", null);
-	}
-
-	@Test
-	public void testIsFalseWithTrueDisabled() {
-		verifier.setDisabled(true);
-		verifier.isFalse(true);
-		verifier.isFalse(true, "");
-		verifier.isFalse(true, "%s", "1");
-		verifier.isFalseCm(true, "", null);
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsFalseWithTrue1() {
-		verifier.isFalse(true);
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsFalseWithTrue2() {
-		verifier.isFalse(true, "");
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsFalseWithTrue3() {
-		verifier.isFalse(true, "%s", "1");
-	}
-
-	@Test(expected = ArgumentVerificationException.class)
-	public void testIsFalseCmWithTrue() {
-		verifier.isFalseCm(true, "", null);
-	}
-
-	// isAssignableFrom*
-
-	@Test
-	public void testIsAssignableFromWithTrue() {
-		Assert.assertEquals(String.class,
-				verifier.isAssignableFrom(CharSequence.class, String.class));
-		Assert.assertEquals(String.class,
-				verifier.isAssignableFrom(CharSequence.class, String.class, ""));
-		Assert.assertEquals(String.class, verifier.isAssignableFrom(
-				CharSequence.class, String.class, "%s", "1"));
-		Assert.assertEquals(String.class, verifier.isAssignableFromCm(
-				CharSequence.class, String.class, "", null));
-	}
-
-	@Test
-	public void testIsAssignableFromWithFalseDisabled() {
-		verifier.setDisabled(true);
-		Assert.assertEquals(Integer.class,
-				verifier.isAssignableFrom(CharSequence.class, Integer.class));
-		Assert.assertEquals(Integer.class,
-				verifier.isAssignableFrom(CharSequence.class, Integer.class, ""));
-		Assert.assertEquals(Integer.class, verifier.isAssignableFrom(
-				CharSequence.class, Integer.class, "%s", "1"));
-		Assert.assertEquals(Integer.class, verifier.isAssignableFromCm(
-				CharSequence.class, Integer.class, "", null));
-	}
-
-	@Test(expected = ArgumentTypeVerificationException.class)
-	public void testIsAssignableFromWithFalse1() {
-		verifier.isAssignableFrom(CharSequence.class, Integer.class);
-	}
-
-	@Test(expected = ArgumentTypeVerificationException.class)
-	public void testIsAssignableFromWithFalse2() {
-		verifier.isAssignableFrom(CharSequence.class, Integer.class, "");
-	}
-
-	@Test(expected = ArgumentTypeVerificationException.class)
-	public void testIsAssignableFromWithFalse3() {
-		verifier.isAssignableFrom(CharSequence.class, Integer.class, "%s", "1");
-	}
-
-	@Test(expected = ArgumentTypeVerificationException.class)
-	public void testIsAssignableFromCmWithFalse() {
-		verifier.isAssignableFromCm(CharSequence.class, Integer.class, "", null);
-	}
-
-	// isInstanceOf*
-
-	@Test
-	public void testIsInstanceOfWithTrue() {
-		Assert.assertEquals("", verifier.isInstanceOf("", String.class));
-		Assert.assertEquals("", verifier.isInstanceOf("", String.class, ""));
-		Assert.assertEquals("",
-				verifier.isInstanceOf("", String.class, "%s", "1"));
-		Assert.assertEquals("",
-				verifier.isInstanceOfCm("", String.class, "", null));
-	}
-
-	@Test(expected = ClassCastException.class)
-	public void testIsInstanceOfWithFalseDisabled() {
-		verifier.setDisabled(true);
-		Assert.assertEquals(null, verifier.isInstanceOf(1, String.class));
-		Assert.assertEquals(null, verifier.isInstanceOf(1, String.class, ""));
-		Assert.assertEquals(null,
-				verifier.isInstanceOf(1, String.class, "%s", "1"));
-		Assert.assertEquals(null,
-				verifier.isInstanceOfCm(1, String.class, "", null));
-	}
-
-	@Test(expected = ArgumentTypeVerificationException.class)
-	public void testIsInstanceOfWithFalse1() {
-		verifier.isInstanceOf(1, String.class, 1);
-	}
-
-	@Test(expected = ArgumentTypeVerificationException.class)
-	public void testIsInstanceOfWithFalse2() {
-		verifier.isInstanceOf(1, String.class, "");
-	}
-
-	@Test(expected = ArgumentTypeVerificationException.class)
-	public void testIsInstanceOfWithFalse3() {
-		verifier.isInstanceOf(1, String.class, "%s", "1");
-	}
-
-	@Test(expected = ArgumentTypeVerificationException.class)
-	public void testIsInstanceOfCmWithFalse() {
-		verifier.isInstanceOfCm(1, String.class, "", null);
-	}
-
-	// notNull*
-
-	@Test
-	public void testNotNullWithNotNull() {
-		Assert.assertEquals("", verifier.notNull(""));
-		Assert.assertEquals("", verifier.notNull("", ""));
-		Assert.assertEquals("", verifier.notNull("", "%s", "1"));
-		Assert.assertEquals("", verifier.notNullCm("", "", null));
-	}
-
-	@Test
-	public void testNotNullWithNullDisabled() {
-		verifier.setDisabled(true);
-		Assert.assertEquals(null, verifier.notNull(null));
-		Assert.assertEquals(null, verifier.notNull(null, ""));
-		Assert.assertEquals(null, verifier.notNull(null, "%s", "1"));
-		Assert.assertEquals(null, verifier.notNullCm(null, "", null));
-	}
-
-	@Test(expected = NullPointerArgumentVerificationException.class)
-	public void testNotNullWithNull1() {
-		verifier.notNull(null);
-	}
-
-	@Test(expected = NullPointerArgumentVerificationException.class)
-	public void testNotNullWithNull2() {
-		verifier.notNull(null, "");
-	}
-
-	@Test(expected = NullPointerArgumentVerificationException.class)
-	public void testNotNullWithNull3() {
-		verifier.notNull(null, "%s", "1");
-	}
-
-	@Test(expected = NullPointerArgumentVerificationException.class)
-	public void testNotNullCmWithNull() {
-		verifier.notNullCm(null, "", null);
+	@Override
+	protected IVerifier newVerifier() {
+		return new ObjectVerifier(null, new ExceptionMessageInfo("Test"),
+				ExceptionTypeInfo.of(ArgumentVerificationException.class),
+				ExceptionTypeInfo.of(ArgumentTypeVerificationException.class),
+				ExceptionTypeInfo
+						.of(NullPointerArgumentVerificationException.class));
 	}
 }

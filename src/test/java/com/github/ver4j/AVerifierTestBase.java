@@ -18,28 +18,32 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public abstract class AVerifierTestBase {
 
-	protected static MethodInvocationParams of(Object returnValue,
-			Object... args) {
+	@Nonnull
+	protected static MethodInvocationParams of(@Nonnull Object returnValue,
+			@Nonnull Object... args) {
 		return new MethodInvocationParams(returnValue, args);
 	}
 
+	@Nonnull
 	protected static MethodInvocationParams of(
-			Class<? extends GeneralVerificationException> expectedExceptionType,
-			Object returnValue, Object... args) {
+			@Nonnull Class<? extends GeneralVerificationException> expectedExceptionType,
+			Object returnValue, @Nonnull Object... args) {
 		return new MethodInvocationParams(expectedExceptionType, returnValue,
 				args);
 	}
 
+	@Nonnull
 	protected static MethodInvocationParams of(
-			Class<? extends GeneralVerificationException> expectedExceptionType,
-			Class<? extends RuntimeException> expectedDisabledExceptionType,
-			Object returnValue, Object... args) {
+			@Nonnull Class<? extends GeneralVerificationException> expectedExceptionType,
+			@Nonnull Class<? extends RuntimeException> expectedDisabledExceptionType,
+			Object returnValue, @Nonnull Object... args) {
 		return new MethodInvocationParams(expectedExceptionType,
 				expectedDisabledExceptionType, returnValue, args);
 	}
 
+	@Nonnull
 	protected static MethodInvocationParams[] invocations(
-			MethodInvocationParams... invocationParams) {
+			@Nonnull MethodInvocationParams... invocationParams) {
 		return invocationParams;
 	}
 
